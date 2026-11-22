@@ -25,21 +25,27 @@ Homebrew - brew install cmake pkg-config
 ### Windows (PowerShell)
 
 ```cd C:\```
+
 ```git clone https://github.com/microsoft/vcpkg.git```
+
 ```cd vcpkg```
+
 ```.\bootstrap-vcpkg.bat```
 
 ### macOS (Terminal)
 
 ```cd ~```
+
 ```git clone https://github.com/microsoft/vcpkg.git```
+
 ```cd vcpkg```
+
 ```./bootstrap-vcpkg.sh```
 
 
 
 ## Generate Project and Create Build
 
-```cmake --preset default => Generates the project```
+```cmake --preset default``` => Generates the project
 
-```cmake --build build => Creates an executable```
+```cmake --build build``` => Creates an executable
