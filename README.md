@@ -91,22 +91,20 @@ cmake --build build-xcode
 
 ## Run
 
-The `graphics/` folder is in the project's root, and the game loads its images with relative paths such as `graphics/LonerA.bmp`.
+The build copies the `graphics/` folder next to the executable, and the game loads its images with relative paths such as `graphics/LonerA.bmp`. Run the executable from its own folder so those paths are found.
 
-<!-- TODO: fill in after checking CMakeLists.txt.
-     - the executable name
-     - where it ends up (with the Visual Studio generator it is usually build\Debug\<name>.exe)
-     - how to launch it so `graphics/` is found (either launch from the project root, or copy graphics/ next to the exe in CMake)
--->
+### Windows (PowerShell)
 
 ```powershell
-# Windows, from the project root
-.\build\Debug\<ExecutableName>.exe
+cd build\Debug
+.\2DGameEngine.exe
 ```
 
+### macOS (Terminal)
+
 ```bash
-# macOS, from the project root
-./build/<ExecutableName>
+cd build-xcode/Debug/
+./2DGameEngine
 ```
 
 You should see a window with a magenta background.
