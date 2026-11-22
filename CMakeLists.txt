@@ -1,14 +1,30 @@
-cmake_minimum_required(VERSION 3.22)
-project(sdl_tutorial LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.25)
+project(2DGameEngine LANGUAGES CXX)
  
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
- 
-find_package(SDL3 3.4 CONFIG REQUIRED)   # fails early if SDL is older than 3.4
- 
-add_executable(
-        sdl_tutorial
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+# --- Dependencies ---------------------------------------------------------
+include(FetchContent)
+
+set(SDL_SHARED OFF CACHE BOOL "" FORCE)
+set(SDL_STATIC ON  CACHE BOOL "" FORCE)
+set(SDL_TEST_LIBRARY OFF CACHE BOOL "" FORCE)
+set(SDL_TESTS OFF CACHE BOOL "" FORCE)
+set(SDL_EXAMPLES OFF CACHE BOOL "" FORCE)
+FetchContent_Declare(SDL3
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+    GIT_TAG        release-3.4.16
+    GIT_SHALLOW    TRUE)
+FetchContent_MakeAvailable(SDL3)
+
+add_subdirectory(external/glad)
+find_package(OpenGL REQUIRED)
+
+# --- Application ----------------------------------------------------------
+add_executable(${PROJECT_NAME}
         src/main.cpp
         src/Scene.h src/Scene.cpp
         src/Program.h src/Program.cpp
@@ -19,24 +35,32 @@ add_executable(
         src/Vector2DInt.h src/Vector2DInt.cpp
         src/Actor.h src/Actor.cpp
 )
-target_link_libraries(sdl_tutorial PRIVATE SDL3::SDL3)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3 glad OpenGL::GL)
  
 if (MSVC)
-  target_compile_options(sdl_tutorial PRIVATE /W4)
+  target_compile_options(${PROJECT_NAME} PRIVATE /W4)
 else()
-  target_compile_options(sdl_tutorial PRIVATE -Wall -Wextra -Wpedantic)
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
 endif()
- 
+
+# --- Assets ---------------------------------------------------------------
 # Copy the assets next to the executable after every build.
 # (If you create the graphics folder later, run "cmake --preset default" again.)
 if (EXISTS ${CMAKE_SOURCE_DIR}/graphics)
-  add_custom_command(TARGET sdl_tutorial POST_BUILD
+  add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
             ${CMAKE_SOURCE_DIR}/graphics
-            $<TARGET_FILE_DIR:sdl_tutorial>/graphics)
+	    $<TARGET_FILE_DIR:${PROJECT_NAME}>/graphics)
 endif()
- 
+
+# --- IDE settings ---------------------------------------------------------
 # Run from the executable's folder inside the IDEs, so "graphics/..." is found
-set_target_properties(sdl_tutorial PROPERTIES
-  VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:sdl_tutorial>"
-  XCODE_SCHEME_WORKING_DIRECTORY "$<TARGET_FILE_DIR:sdl_tutorial>")
+set_target_properties(${PROJECT_NAME} PROPERTIES
+  VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+  XCODE_SCHEME_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
+set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
+
+set_target_properties(glad PROPERTIES FOLDER "external")
+if(TARGET SDL3-static)
+    set_target_properties(SDL3-static PROPERTIES FOLDER "external")
+endif()
