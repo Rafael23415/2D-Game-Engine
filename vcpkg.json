@@ -1,0 +1,8 @@
+{
+  "name": "sdl-tutorial",
+  "version": "1.0.0",
+  "dependencies": [
+    "sdl3"
+  ],
+  "builtin-baseline": "a27c8b7ec35e9eaad27c6e3e6e795742eeeceb58"
+}
