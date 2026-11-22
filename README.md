@@ -3,9 +3,9 @@
 ### Windows
 
 Visual Studio Community - Install "Desktop Development with C++" workload
-(If CMake doesn't appear as installed, install through cmake.org/download, choosing “Add CMake to the system PATH” during installation)
+(If CMake doesn't appear as installed, install through [CMake](cmake.org/download), choosing “Add CMake to the system PATH” during installation)
 
-Git - [git-scm.com](git-scm.com)
+[Git](git-scm.com)
 
 ### macOS
 
