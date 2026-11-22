@@ -15,6 +15,7 @@ Homebrew - brew install cmake pkg-config
 ## Check both are installed
 
 ```git --version```
+
 ```cmake --version```
 
 
