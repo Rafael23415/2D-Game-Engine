@@ -1,4 +1,4 @@
-# Engineering2D
+# 2D Game Engine
 
 A 2D game engine written in C++ with SDL3.
 

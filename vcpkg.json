@@ -1,5 +1,5 @@
 {
-  "name": "sdl-tutorial",
+  "name": "2D-game-engine",
   "version": "1.0.0",
   "dependencies": [
     "sdl3"
