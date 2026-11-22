@@ -82,6 +82,8 @@ cmake --preset xcode
 cmake --build build-xcode
 ```
 
+**Commands information**
+
 - `cmake --preset default` generates the project.
 - `cmake --build build` builds the executable.
 
