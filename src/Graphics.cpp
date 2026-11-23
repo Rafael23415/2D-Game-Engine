@@ -16,7 +16,7 @@ namespace Engineering2D
 
 		WindowImpl(const char* name, const Vector2DInt windowSize)
 		{
-			SDL_CreateWindow(name, windowSize.x, windowSize.y, SDL_WINDOW_OPENGL);
+			m_window = std::make_unique<SDL_Window>(SDL_CreateWindow(name, windowSize.x, windowSize.y, SDL_WINDOW_OPENGL));
 		};
 
 		~WindowImpl()
@@ -35,9 +35,9 @@ namespace Engineering2D
 		std::unique_ptr<SDL_GLContext> m_context;
 
 
-		ContextImpl(SDL_Window* window)
+		ContextImpl(WindowImpl& window)
 		{
-			SDL_GL_CreateContext(window);
+			m_context = std::make_unique<SDL_GLContext>(SDL_GL_CreateContext(window.m_window.get()));
 		};
 
 		~ContextImpl() {
@@ -56,7 +56,7 @@ namespace Engineering2D
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
-		m_window = std::make_unique<WindowImpl>(name, windowSize.x, windowSize.y);
+		m_window = std::make_unique<WindowImpl>(name, windowSize);
 		if (!m_window) {
 			throw std::runtime_error(std::string("Failed to create SDL Window: ") + SDL_GetError());
 			SDL_Quit();

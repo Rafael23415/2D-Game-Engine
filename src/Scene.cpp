@@ -61,13 +61,17 @@ namespace Engineering2D
             
             m_graphics->ClearContext();
             
-            for (auto i = m_actors.begin(); i != m_actors.end(); ++i)
+            for (auto i = m_actors.begin(); i != m_actors.end();)
             {
                 (*i)->Update(deltaTime);
                 
                 if ((*i)->IsWaitingDestroy())
                 {
                     m_actors.erase(i);
+                }
+                else
+                {
+                    ++i;
                 }
             }
 

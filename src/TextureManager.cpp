@@ -9,18 +9,6 @@
 
 namespace Engineering2D
 {
-	Texture::Texture(Texture&& t) noexcept
-	{
-		m_textureIndex = t.m_textureIndex;
-	}
-
-	Texture& Texture::operator=(Texture&& t) noexcept
-	{
-		m_textureIndex = t.m_textureIndex;
-
-		return *this;
-	}
-
 	Texture::Texture(unsigned int textureIndex) : m_textureIndex(textureIndex)
 	{
 	}
@@ -32,14 +20,6 @@ namespace Engineering2D
 
 	//===========================================================================
 
-	TextureManager::~TextureManager()
-	{
-		for (auto i = textures.begin(); i!= textures.end(); ++i)
-		{
-			textures.erase(i);
-		}
-	}
-
 	std::shared_ptr<Texture> TextureManager::GetTexture(char const* filePath)
 	{
 		if (auto it = textures.find(filePath); it != textures.end())
@@ -48,7 +28,7 @@ namespace Engineering2D
 			return it->second;
 		}
 
-		auto texture = std::make_shared<Texture>(filePath);
+		auto texture = std::make_shared<Texture>(GenerateTexture(filePath));
 		textures[filePath] = texture;
 
 		std::cout << "Created texture: " << filePath << std::endl;

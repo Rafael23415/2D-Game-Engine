@@ -12,13 +12,6 @@ namespace Engineering2D
 	class Texture
 	{
 	public:
-
-		Texture(const Texture& t) = delete;
-		Texture& operator=(const Texture& t) = delete;
-
-		Texture(Texture&& t) noexcept;
-		Texture& operator=(Texture&& t) noexcept;
-
 		Texture(unsigned int textureIndex);
 
 		~Texture();
@@ -42,7 +35,7 @@ namespace Engineering2D
 	{
 	public:
 		TextureManager() = default;
-		~TextureManager();
+		~TextureManager() = default;
 
 		std::shared_ptr<Texture> GetTexture(char const* filePath);
 
