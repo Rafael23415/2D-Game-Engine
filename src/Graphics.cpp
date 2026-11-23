@@ -10,46 +10,50 @@
 
 namespace Engineering2D
 {
+	// ---------------------------------------------------------
+	// Window implementation
+	// ---------------------------------------------------------
+
 	struct Graphics::WindowImpl
 	{
 		std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> m_windowPtr;
 
-		WindowImpl(const char* name, const Vector2DInt windowSize)
+		WindowImpl(const char* name, const Vector2DInt windowSize) : m_windowPtr(SDL_CreateWindow(name, windowSize.x, windowSize.y, SDL_WINDOW_OPENGL), SDL_DestroyWindow)
 		{
-			m_windowPtr = std::make_unique<SDL_Window>(SDL_CreateWindow(name, windowSize.x, windowSize.y, SDL_WINDOW_OPENGL));
-		};
-
-		~WindowImpl()
-		{
-			if (m_windowPtr)
+			if (!m_windowPtr)
 			{
-					SDL_DestroyWindow(m_windowPtr.get());
+				throw std::runtime_error(std::string("Failed to create SDL Window: ") + SDL_GetError());
 			}
 		};
 
 		void SwapWindow()
 		{
-			if(m_windowPtr)
+			SDL_GL_SwapWindow(m_windowPtr.get());
+		};
+	};
+
+	// ---------------------------------------------------------
+	// OpenGL context implementation
+	// ---------------------------------------------------------
+
+	struct Graphics::ContextImpl
+	{
+		SDL_GLContext m_contextPtr = nullptr;
+
+		ContextImpl(WindowImpl& window)
+		{
+			m_contextPtr = SDL_GL_CreateContext(window.m_windowPtr.get());
+
+			if (!m_contextPtr)
 			{
-				SDL_GL_SwapWindow(m_windowPtr.get());
+				throw std::runtime_error(std::string("Failed to create OpenGL context: ") + SDL_GetError());
 			}
 		};
 	};
 
-	struct Graphics::ContextImpl
-	{
-		std::unique_ptr<SDL_GLContext> m_contextPtr;
-
-
-		ContextImpl(WindowImpl& window)
-		{
-			m_contextPtr = std::make_unique<SDL_GLContext>(SDL_GL_CreateContext(window.m_windowPtr.get()));
-		};
-
-		~ContextImpl() {
-			SDL_GL_DestroyContext(*m_contextPtr.get());
-		};
-	};
+	// ---------------------------------------------------------
+	// Graphics
+	// ---------------------------------------------------------
 
 	Graphics::Graphics(const char* name, const Vector2DInt windowSize)
 	{
@@ -62,25 +66,34 @@ namespace Engineering2D
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
-		m_window = std::make_unique<WindowImpl>(name, windowSize);
-		if (!m_window) {
-			throw std::runtime_error(std::string("Failed to create SDL Window: ") + SDL_GetError());
-			SDL_Quit();
+		try {
+			m_window = std::make_unique<WindowImpl>(name, windowSize);
+			if (!m_window) {
+				throw std::runtime_error(std::string("Failed to create SDL Window: ") + SDL_GetError());
+				SDL_Quit();
+			}
+
+
+			m_context = std::make_unique<ContextImpl>(*m_window);
+			if (!m_context) {
+				throw std::runtime_error(std::string("Failed to create OpenGL context: ") + SDL_GetError());
+				m_window.reset();
+				SDL_Quit();
+			}
+
+			if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
+				throw std::runtime_error(std::string("Failed to initialize GLAD"));
+				m_context.reset();
+				m_window.reset();
+				SDL_Quit();
+			}
 		}
-
-
-		m_context = std::make_unique<ContextImpl>(m_window);
-		if (!m_context) {
-			throw std::runtime_error(std::string("Failed to create OpenGL context: ") + SDL_GetError());
-			m_window.reset();
-			SDL_Quit();
-		}
-
-		if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
-			throw std::runtime_error(std::string("Failed to initialize GLAD"));
+		catch (const std::exception& e)
+		{
 			m_context.reset();
 			m_window.reset();
-			SDL_Quit();
+
+			std::cout << e.what() << std::endl;
 		}
 	}
 	
@@ -107,6 +120,9 @@ namespace Engineering2D
 
 	void Graphics::SwapWindow()
 	{
-		m_window.get()->SwapWindow();
+		if(m_window)
+		{
+			m_window.get()->SwapWindow();
+		}
 	}
 }

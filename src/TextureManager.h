@@ -39,9 +39,9 @@ namespace Engineering2D
 
 		std::shared_ptr<Texture> GetTexture(char const* filePath);
 
-		unsigned int GenerateTexture(char const* filePath);
-		
 	private:
-		std::unordered_map<const std::string, std::shared_ptr<Texture>> textures;
+		std::unordered_map<std::string, std::shared_ptr<Texture>> textures;
+
+		unsigned int GenerateTexture(char const* filePath);
 	};
 }

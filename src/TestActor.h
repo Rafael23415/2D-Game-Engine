@@ -7,7 +7,7 @@ class TestActor : Actor
 
 public:
 
-	TestActor(Vector2D position, Texture* texture);
+	TestActor(Vector2D position, std::weak_ptr<Texture> texture);
 
 	// Inherited via Actor
 	void Update(double deltaTime) override;

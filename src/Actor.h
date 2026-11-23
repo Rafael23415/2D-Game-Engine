@@ -11,7 +11,7 @@ namespace Engineering2D
     {
     public:
     
-        Actor(Vector2D position, Vector2D scale, Texture* spriteSheet);
+        Actor(Vector2D position, Vector2D scale, std::weak_ptr<Texture> texture);
         virtual ~Actor() = default;
     
         Actor(const Actor& actor) = delete;
@@ -31,7 +31,7 @@ namespace Engineering2D
     
         Vector2D m_position;
         Vector2D m_scale;
-        Texture* m_texture;
+        std::weak_ptr<Texture> m_texture;
         bool m_active = true;
         bool m_waitingDestroy = false;
     };

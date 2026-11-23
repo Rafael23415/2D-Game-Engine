@@ -92,6 +92,11 @@ namespace Engineering2D
         m_actors.push_back(std::move(a));
     }
 
+    std::shared_ptr<Texture> Scene::CreateTexture(const char* filePath)
+    {
+        return m_textureManager.get()->GetTexture(filePath);
+    }
+
     bool Scene::IsRunning() const
     {
         return m_isRunning;

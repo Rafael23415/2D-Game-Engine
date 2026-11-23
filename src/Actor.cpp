@@ -2,7 +2,7 @@
 
 namespace Engineering2D
 {
-    Actor::Actor(Vector2D position, Vector2D scale, Texture* texture) : m_position(position), m_scale(scale), m_active(true), m_texture(texture)
+    Actor::Actor(Vector2D position, Vector2D scale, std::weak_ptr<Texture> texture) : m_position(position), m_scale(scale), m_active(true), m_texture(texture)
     {
     }
 
@@ -14,7 +14,7 @@ namespace Engineering2D
         m_active = actor.m_active;
         m_waitingDestroy = actor.m_waitingDestroy;
 
-        actor.m_texture = nullptr;
+        //actor.m_texture = nullptr;
     }
 
     Actor& Actor::operator=(Actor&& actor) noexcept
@@ -25,7 +25,7 @@ namespace Engineering2D
         m_active = actor.m_active;
         m_waitingDestroy = actor.m_waitingDestroy;
 
-        actor.m_texture = nullptr;
+        //actor.m_texture = nullptr;
         
         return *this;
     }

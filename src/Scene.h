@@ -28,6 +28,8 @@ namespace Engineering2D
         template<typename T, typename... Args>
         void CreateEntity(Args&&... args);
         
+        std::shared_ptr<Texture> CreateTexture(const char* filePath);
+
         bool IsRunning() const;
         
     private:
