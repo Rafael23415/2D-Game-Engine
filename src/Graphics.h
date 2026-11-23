@@ -21,11 +21,10 @@ namespace Engineering2D
 
 	public:
 		Graphics(const char* title, const Vector2DInt windowSize);
-		Graphics() = default;
 		
 		~Graphics();
 
-		void ClearRenderer();
+		void ClearContext();
 		void SwapWindow();
 	};
 }

@@ -9,22 +9,6 @@
 
 namespace Engineering2D
 {
-	class TextureManager
-	{
-	public:
-		TextureManager() = default;
-		~TextureManager();
-
-		std::shared_ptr<Texture> GetTexture(char const* filePath);
-
-		unsigned int GenerateTexture(char const* filePath);
-		
-	private:
-		std::unordered_map<const std::string, std::shared_ptr<Texture>> textures;
-	};
-
-	//===========================================================================
-
 	class Texture
 	{
 	public:
@@ -42,9 +26,6 @@ namespace Engineering2D
 	private:
 		unsigned int m_textureIndex;
 
-		//struct TextureImpl;
-		//TextureImpl* m_textureImpl;
-
 		// SDL_FRect spritePositionScale;
 		// SDL_FRect spriteCrop;
 		//
@@ -53,5 +34,21 @@ namespace Engineering2D
 		//
 		// const float frame_duration = 0;
 		// float frameTime = 0;
+	};
+	
+	//===========================================================================
+
+	class TextureManager
+	{
+	public:
+		TextureManager() = default;
+		~TextureManager();
+
+		std::shared_ptr<Texture> GetTexture(char const* filePath);
+
+		unsigned int GenerateTexture(char const* filePath);
+		
+	private:
+		std::unordered_map<const std::string, std::shared_ptr<Texture>> textures;
 	};
 }

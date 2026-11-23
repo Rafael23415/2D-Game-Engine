@@ -2,7 +2,6 @@
 
 namespace Engineering2D
 {
-
     void InputManager::ProcessInput()
     {
         while (SDL_PollEvent(&m_ev)) {

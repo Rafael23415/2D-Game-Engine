@@ -59,7 +59,7 @@ namespace Engineering2D
                 m_isRunning = false;
             }
             
-            m_graphics->ClearRenderer();
+            m_graphics->ClearContext();
             
             for (auto i = m_actors.begin(); i != m_actors.end(); ++i)
             {
@@ -84,18 +84,8 @@ namespace Engineering2D
     void Scene::CreateEntity(Args&&... args)
     {
         const auto a = std::make_unique<T>(std::forward<Args>(args)...);
-        
-        m_actors.push_back(std::move(a));
-    }
-    
-    Graphics& Scene::GetProgram()
-    {
-        return *m_graphics;
-    }
 
-    TextureManager& Scene::GetTextureManager()
-    {
-        return *m_textureManager;
+        m_actors.push_back(std::move(a));
     }
 
     bool Scene::IsRunning() const

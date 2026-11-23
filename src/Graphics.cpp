@@ -10,7 +10,7 @@
 
 namespace Engineering2D
 {
-	struct WindowImpl
+	struct Graphics::WindowImpl
 	{
 		std::unique_ptr<SDL_Window> m_window;
 
@@ -30,7 +30,7 @@ namespace Engineering2D
 		};
 	};
 
-	struct ContextImpl
+	struct Graphics::ContextImpl
 	{
 		std::unique_ptr<SDL_GLContext> m_context;
 
@@ -84,16 +84,16 @@ namespace Engineering2D
 		{
 			m_context.reset();
 		}
-		
+
 		if (m_window)
 		{
 			m_window.reset();
 		}
-		
+
 		SDL_Quit();
 	}
 
-	void Graphics::ClearRenderer()
+	void Graphics::ClearContext()
 	{
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -101,6 +101,6 @@ namespace Engineering2D
 
 	void Graphics::SwapWindow()
 	{
-		SDL_GL_SwapWindow(m_window.get()->SwapWindow());
+		m_window.get()->SwapWindow();
 	}
 }

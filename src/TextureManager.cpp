@@ -9,6 +9,29 @@
 
 namespace Engineering2D
 {
+	Texture::Texture(Texture&& t) noexcept
+	{
+		m_textureIndex = t.m_textureIndex;
+	}
+
+	Texture& Texture::operator=(Texture&& t) noexcept
+	{
+		m_textureIndex = t.m_textureIndex;
+
+		return *this;
+	}
+
+	Texture::Texture(unsigned int textureIndex) : m_textureIndex(textureIndex)
+	{
+	}
+
+	Texture::~Texture()
+	{
+		glDeleteTextures(1, &m_textureIndex);
+	}
+
+	//===========================================================================
+
 	TextureManager::~TextureManager()
 	{
 		for (auto i = textures.begin(); i!= textures.end(); ++i)
@@ -65,28 +88,5 @@ namespace Engineering2D
 		stbi_image_free(data);
 
 		return texture;
-	}
-
-	//===========================================================================
-
-	Texture::Texture(Texture&& t) noexcept
-	{
-		m_textureIndex = t.m_textureIndex;
-	}
-
-	Texture& Texture::operator=(Texture&& t) noexcept
-	{
-		m_textureIndex = t.m_textureIndex;
-
-		return *this;
-	}
-
-	Texture::Texture(unsigned int textureIndex) : m_textureIndex(textureIndex)
-	{
-	}
-
-	Texture::~Texture()
-	{
-		glDeleteTextures(1, &m_textureIndex);
 	}
 }

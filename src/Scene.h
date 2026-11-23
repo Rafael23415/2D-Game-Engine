@@ -28,16 +28,14 @@ namespace Engineering2D
         template<typename T, typename... Args>
         void CreateEntity(Args&&... args);
         
-        static Graphics& GetProgram();
-        static TextureManager& GetTextureManager();
         bool IsRunning() const;
         
     private:
         const Vector2DInt m_worldSize;
         
-        static std::unique_ptr<Graphics> m_graphics;
-        static std::unique_ptr<InputManager> m_inputManager;
-        static std::unique_ptr<TextureManager> m_textureManager;
+        std::unique_ptr<Graphics> m_graphics;
+        std::unique_ptr<InputManager> m_inputManager;
+        std::unique_ptr<TextureManager> m_textureManager;
         
         std::vector<std::unique_ptr<Actor>> m_actors;
         
