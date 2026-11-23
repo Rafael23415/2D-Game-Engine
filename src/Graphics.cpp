@@ -12,36 +12,42 @@ namespace Engineering2D
 {
 	struct Graphics::WindowImpl
 	{
-		std::unique_ptr<SDL_Window> m_window;
+		std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> m_windowPtr;
 
 		WindowImpl(const char* name, const Vector2DInt windowSize)
 		{
-			m_window = std::make_unique<SDL_Window>(SDL_CreateWindow(name, windowSize.x, windowSize.y, SDL_WINDOW_OPENGL));
+			m_windowPtr = std::make_unique<SDL_Window>(SDL_CreateWindow(name, windowSize.x, windowSize.y, SDL_WINDOW_OPENGL));
 		};
 
 		~WindowImpl()
 		{
-			SDL_DestroyWindow(m_window.get());
+			if (m_windowPtr)
+			{
+					SDL_DestroyWindow(m_windowPtr.get());
+			}
 		};
 
 		void SwapWindow()
 		{
-			SDL_GL_SwapWindow(m_window.get());
+			if(m_windowPtr)
+			{
+				SDL_GL_SwapWindow(m_windowPtr.get());
+			}
 		};
 	};
 
 	struct Graphics::ContextImpl
 	{
-		std::unique_ptr<SDL_GLContext> m_context;
+		std::unique_ptr<SDL_GLContext> m_contextPtr;
 
 
 		ContextImpl(WindowImpl& window)
 		{
-			m_context = std::make_unique<SDL_GLContext>(SDL_GL_CreateContext(window.m_window.get()));
+			m_contextPtr = std::make_unique<SDL_GLContext>(SDL_GL_CreateContext(window.m_windowPtr.get()));
 		};
 
 		~ContextImpl() {
-			SDL_GL_DestroyContext(*m_context.get());
+			SDL_GL_DestroyContext(*m_contextPtr.get());
 		};
 	};
 
