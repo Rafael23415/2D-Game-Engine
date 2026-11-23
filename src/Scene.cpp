@@ -1,10 +1,11 @@
 ﻿#include "Scene.h"
 
 #include <stdexcept>
+#include <SDL3/SDL_timer.h>
 
 namespace Engineering2D
 {
-    Scene::Scene(const char* name, const Vector2DInt& windowSize, const Vector2DInt& worldSize) : worldSize(worldSize)
+    Scene::Scene(const char* name, const Vector2DInt& windowSize, const Vector2DInt& worldSize) : m_worldSize(worldSize)
     {
         if (windowSize.x <= 0 || windowSize.y <= 0)
         {
@@ -16,18 +17,18 @@ namespace Engineering2D
             throw std::invalid_argument{"The world size must be greater than zero."};
         }
         
-        isRunning = true;
+        m_isRunning = true;
         
-        program = std::make_unique<Program>(name, windowSize);
-        inputManager = std::make_unique<InputManager>();
-        textureManager = std::make_unique<TextureManager>();
+        m_graphics = std::make_unique<Graphics>(name, windowSize);
+        m_inputManager = std::make_unique<InputManager>();
+        m_textureManager = std::make_unique<TextureManager>();
     }
     
     Scene::~Scene()
     {
-        if (!actors.empty())
+        if (!m_actors.empty())
         {
-            for (auto& actor : actors)
+            for (auto& actor : m_actors)
             {
                 actor.reset();
             }
@@ -36,9 +37,6 @@ namespace Engineering2D
     
     void Scene::Start()
     {
-        program->SetVSync(true);
-        program->SetColor(255, 0, 255);
-        
         Update();
     }
 
@@ -52,54 +50,56 @@ namespace Engineering2D
         currentTime = SDL_GetTicksNS();
         deltaTime = (currentTime - prevTime) / 1e9f;
         
-        while (isRunning)
+        while (m_isRunning)
         {
-            inputManager->ProcessInput();
+            m_inputManager->ProcessInput();
             
-            if (inputManager->IsWaitingShutdown())
+            if (m_inputManager->IsWaitingShutdown())
             {
-                isRunning = false;
+                m_isRunning = false;
             }
             
-            program->ClearRenderer();
-            program->PresentRenderer();
+            m_graphics->ClearRenderer();
             
-            for (auto i = actors.begin(); i != actors.end(); ++i)
+            for (auto i = m_actors.begin(); i != m_actors.end(); ++i)
             {
                 (*i)->Update(deltaTime);
                 
                 if ((*i)->IsWaitingDestroy())
                 {
-                    actors.erase(i);
+                    m_actors.erase(i);
                 }
             }
+
+            m_graphics->SwapWindow();
         }
     }
 
     void Scene::ShutDown()
     {
-        isRunning = false;
+        m_isRunning = false;
     }
 
-    void Scene::CreateEntity(Actor& actor)
+    template<typename T, typename... Args>
+    void Scene::CreateEntity(Args&&... args)
     {
-        const auto a = std::make_unique<Actor>(actor);
+        const auto a = std::make_unique<T>(std::forward<Args>(args)...);
         
-        actors.push_back(std::move(a));
+        m_actors.push_back(std::move(a));
     }
     
-    Program& Scene::GetProgram() const
+    Graphics& Scene::GetProgram()
     {
-        return *program;
+        return *m_graphics;
     }
 
-    TextureManager& Scene::GetTextureManager() const
+    TextureManager& Scene::GetTextureManager()
     {
-        return *textureManager;
+        return *m_textureManager;
     }
 
     bool Scene::IsRunning() const
     {
-        return isRunning;
+        return m_isRunning;
     }
 }

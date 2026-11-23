@@ -15,11 +15,12 @@ find_package(SDL3 3.4 CONFIG REQUIRED)   # fails early if SDL is older than 3.4
 # --- Application ----------------------------------------------------------
 add_executable(${PROJECT_NAME}
         src/main.cpp
+	src/stb_image.cpp
         src/Scene.h src/Scene.cpp
-        src/Program.h src/Program.cpp
+        src/Graphics.h src/Graphics.cpp
         src/InputManager.h src/InputManager.cpp
         src/TextureManager.h src/TextureManager.cpp
-        src/SpriteSheet.h src/SpriteSheet.cpp
+        src/Texture.h src/Texture.cpp
         src/Vector2D.h src/Vector2D.cpp
         src/Vector2DInt.h src/Vector2DInt.cpp
         src/Actor.h src/Actor.cpp

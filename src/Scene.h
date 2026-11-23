@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 
-#include "Program.h"
+#include "Graphics.h"
 #include "InputManager.h"
 #include "TextureManager.h"
 #include "Actor.h"
@@ -24,21 +24,23 @@ namespace Engineering2D
         void Start();
         void Update();
         void ShutDown();
-        void CreateEntity(Actor& actor);
+
+        template<typename T, typename... Args>
+        void CreateEntity(Args&&... args);
         
-        Program& GetProgram() const;
-        TextureManager& GetTextureManager() const;
+        static Graphics& GetProgram();
+        static TextureManager& GetTextureManager();
         bool IsRunning() const;
         
     private:
-        const Vector2DInt worldSize;
+        const Vector2DInt m_worldSize;
         
-        std::unique_ptr<Program> program;
-        std::unique_ptr<InputManager> inputManager;
-        std::unique_ptr<TextureManager> textureManager;
+        static std::unique_ptr<Graphics> m_graphics;
+        static std::unique_ptr<InputManager> m_inputManager;
+        static std::unique_ptr<TextureManager> m_textureManager;
         
-        std::vector<std::unique_ptr<Actor>> actors;
+        std::vector<std::unique_ptr<Actor>> m_actors;
         
-        bool isRunning;
+        bool m_isRunning;
     };
 }

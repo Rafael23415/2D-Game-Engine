@@ -5,11 +5,11 @@ namespace Engineering2D
 
     void InputManager::ProcessInput()
     {
-        while (SDL_PollEvent(&ev)) {
+        while (SDL_PollEvent(&m_ev)) {
             // Getting the events
-            if (ev.type == SDL_EVENT_QUIT)
+            if (m_ev.type == SDL_EVENT_QUIT)
             {
-                m_waitingShutdown = true;
+                m_isWaitingShutdown = true;
             }
         }
     }
@@ -25,6 +25,6 @@ namespace Engineering2D
 
     bool InputManager::IsWaitingShutdown() const
     {
-        return IsWaitingShutdown;
+        return m_isWaitingShutdown;
     }
 }

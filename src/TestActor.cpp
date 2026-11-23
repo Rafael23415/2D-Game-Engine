@@ -1,6 +1,6 @@
 #include "TestActor.h"
 
-TestActor::TestActor(Vector2D position, SpriteSheet* spriteSheet) : Actor(position, Vector2D::zero(), spriteSheet)
+TestActor::TestActor(Vector2D position, Texture* texture) : Actor(position, Vector2D::zero(), texture)
 {
 }
 

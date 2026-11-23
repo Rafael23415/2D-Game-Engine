@@ -11,9 +11,9 @@ int main(int argc, char* argv[])
     {
         Scene scene{ "SDL Test", {640, 480}, {1000, 1000} };
         
-        auto a = scene.GetTextureManager().CreateTexture({ "graphics/LonerA.bmp" });
-        auto b = scene.GetTextureManager().CreateTexture({ "graphics/LonerA.bmp" });
-        auto c = scene.GetTextureManager().CreateTexture({ "graphics/LonerC.bmp" });
+        //auto a = scene.GetTextureManager().CreateTexture({ "graphics/LonerA.bmp" });
+        //auto b = scene.GetTextureManager().CreateTexture({ "graphics/LonerA.bmp" });
+        //auto c = scene.GetTextureManager().CreateTexture({ "graphics/LonerC.bmp" });
         
         //TestActor actor { Vector2D{0, 0}, c };
 

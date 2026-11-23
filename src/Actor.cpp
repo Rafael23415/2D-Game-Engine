@@ -2,8 +2,32 @@
 
 namespace Engineering2D
 {
-    Actor::Actor(Vector2D position, Vector2D scale, SpriteSheet* spriteSheet) : m_position(position), m_scale(scale), m_active(true), m_spriteSheet(spriteSheet)
+    Actor::Actor(Vector2D position, Vector2D scale, Texture* texture) : m_position(position), m_scale(scale), m_active(true), m_texture(texture)
     {
+    }
+
+    Actor::Actor(Actor&& actor) noexcept
+    {
+        m_position = actor.m_position;
+        m_scale = actor.m_scale;
+        m_texture = actor.m_texture;
+        m_active = actor.m_active;
+        m_waitingDestroy = actor.m_waitingDestroy;
+
+        actor.m_texture = nullptr;
+    }
+
+    Actor& Actor::operator=(Actor&& actor) noexcept
+    {
+        m_position = actor.m_position;
+        m_scale = actor.m_scale;
+        m_texture = actor.m_texture;
+        m_active = actor.m_active;
+        m_waitingDestroy = actor.m_waitingDestroy;
+
+        actor.m_texture = nullptr;
+        
+        return *this;
     }
 
     void Actor::Destroy()

@@ -26,10 +26,10 @@ namespace Engineering2D
         bool IsWaitingShutdown() const;
     
     private:
-        SDL_Event ev;
+        SDL_Event m_ev;
 
-        std::map<const std::string&, SDL_Keycode> keybinds;
+        //std::map<const std::string&, SDL_Keycode> keybinds;
         
-        bool m_waitingShutdown = false;
+        bool m_isWaitingShutdown = false;
     };
 }
