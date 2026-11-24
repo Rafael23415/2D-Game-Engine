@@ -73,9 +73,9 @@ namespace Engineering2D
         m_isRunning = false;
     }
 
-    void Scene::CreateEntity(Actor* actor)
+    void Scene::CreateActor(Actor* actor)
     {
-        const auto a = std::make_unique<Actor>(actor);
+        auto a = std::make_unique<Actor>(actor);
 
         m_actors.push_back(std::move(a));
     }

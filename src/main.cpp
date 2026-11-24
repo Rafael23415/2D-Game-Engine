@@ -15,10 +15,7 @@ int main(int argc, char* argv[])
         auto b = scene.CreateTexture({ "graphics/LonerA.bmp" });
         auto c = scene.CreateTexture({ "graphics/LonerC.bmp" });
         
-        TestActor actor { Vector2D{0, 0}, c };
-
-        
-        scene.CreateEntity(&actor);
+        scene.CreateActor(new TestActor{ Vector2D{0, 0}, c });
 
         scene.Start();
     }

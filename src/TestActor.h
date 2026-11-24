@@ -4,7 +4,7 @@
 
 using namespace Engineering2D;
 
-class TestActor : Actor
+class TestActor : public Actor
 {
 
 public:
