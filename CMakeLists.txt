@@ -22,8 +22,8 @@ add_executable(${PROJECT_NAME}
         src/TextureManager.h src/TextureManager.cpp
         src/Vector2D.h src/Vector2D.cpp
         src/Vector2DInt.h src/Vector2DInt.cpp
-        src/Actor.h src/Actor.cpp
         src/TestActor.h src/TestActor.cpp
+        src/Actor.h src/Actor.cpp
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3 glad OpenGL::GL)
  

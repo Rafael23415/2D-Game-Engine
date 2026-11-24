@@ -2,6 +2,8 @@
 
 #include "Scene.h"
 
+#include <memory>
+
 using namespace Engineering2D;
 
 class TestActor : public Actor

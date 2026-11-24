@@ -22,14 +22,14 @@ namespace Engineering2D
 
 	std::shared_ptr<Texture> TextureManager::GetTexture(char const* filePath)
 	{
-		if (auto it = textures.find(filePath); it != textures.end())
+		if (auto it = m_textures.find(filePath); it != m_textures.end())
 		{
 			std::cout << "Loaded texture: " << filePath << std::endl;
 			return it->second;
 		}
 
 		auto texture = std::make_shared<Texture>(GenerateTexture(filePath));
-		textures[filePath] = texture;
+		m_textures[filePath] = texture;
 
 		std::cout << "Created texture: " << filePath << std::endl;
 		return texture;
@@ -39,7 +39,7 @@ namespace Engineering2D
 	{
 		GLuint texture;
 		glGenTextures(1, &texture);
-		glActiveTexture(GL_TEXTURE0 + textures.size());
+		glActiveTexture(GL_TEXTURE0 + m_textures.size());
 		glBindTexture(GL_TEXTURE_2D, texture);
 
 		// Set texture parameters

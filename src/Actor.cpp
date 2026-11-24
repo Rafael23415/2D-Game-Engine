@@ -4,6 +4,7 @@ namespace Engineering2D
 {
     Actor::Actor(Vector2D position, Vector2D scale, std::weak_ptr<Texture> texture) : m_position(position), m_scale(scale), m_active(true), m_texture(texture)
     {
+        std::cout << "Created an Actor" << std::endl;
     }
 
     Actor::Actor(Actor&& actor) noexcept
@@ -14,7 +15,7 @@ namespace Engineering2D
         m_active = actor.m_active;
         m_waitingDestroy = actor.m_waitingDestroy;
 
-        //actor.m_texture = nullptr;
+        std::cout << "Created an Actor from another actor" << std::endl;
     }
 
     Actor& Actor::operator=(Actor&& actor) noexcept
@@ -24,8 +25,6 @@ namespace Engineering2D
         m_texture = actor.m_texture;
         m_active = actor.m_active;
         m_waitingDestroy = actor.m_waitingDestroy;
-
-        //actor.m_texture = nullptr;
         
         return *this;
     }

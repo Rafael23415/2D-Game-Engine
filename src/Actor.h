@@ -3,6 +3,8 @@
 #include "Vector2D.h"
 #include "TextureManager.h"
 
+#include <memory>
+
 namespace Engineering2D
 {
     using namespace Math;
@@ -10,7 +12,6 @@ namespace Engineering2D
     class Actor
     {
     public:
-    
         Actor(Vector2D position, Vector2D scale, std::weak_ptr<Texture> texture);
         virtual ~Actor() = default;
     
@@ -28,7 +29,6 @@ namespace Engineering2D
         bool IsWaitingDestroy() const;
     
     protected:
-    
         Vector2D m_position;
         Vector2D m_scale;
         std::weak_ptr<Texture> m_texture;

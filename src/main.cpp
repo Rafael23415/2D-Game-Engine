@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Scene.h"
+#include "Vector2D.h"
 #include "TestActor.h"
 
 using namespace Engineering2D;
@@ -15,7 +16,7 @@ int main(int argc, char* argv[])
         auto b = scene.CreateTexture({ "graphics/LonerA.bmp" });
         auto c = scene.CreateTexture({ "graphics/LonerC.bmp" });
         
-        scene.CreateActor(new TestActor{ Vector2D{0, 0}, c });
+        scene.CreateActor<TestActor>(Vector2D{ 0, 0 }, c);
 
         scene.Start();
     }

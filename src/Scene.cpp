@@ -73,13 +73,6 @@ namespace Engineering2D
         m_isRunning = false;
     }
 
-    void Scene::CreateActor(Actor* actor)
-    {
-        auto a = std::make_unique<Actor>(actor);
-
-        m_actors.push_back(std::move(a));
-    }
-
     std::shared_ptr<Texture> Scene::CreateTexture(const char* filePath)
     {
         return m_textureManager.get()->GetTexture(filePath);

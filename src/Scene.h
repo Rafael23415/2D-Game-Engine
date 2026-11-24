@@ -24,7 +24,13 @@ namespace Engineering2D
         void Update();
         void ShutDown();
 
-        void CreateActor(Actor* actor);
+        template<typename T, typename... Args>
+        requires std::derived_from<T, Actor>
+        void CreateActor(Args&&... actor)
+        {
+            auto a = std::make_unique<T>(std::forward<Args>(actor)...);
+            m_actors.push_back(std::move(a));
+        };
         
         std::shared_ptr<Texture> CreateTexture(const char* filePath);
 
