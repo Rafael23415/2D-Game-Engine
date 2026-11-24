@@ -97,7 +97,7 @@ The build copies the `graphics/` folder next to the executable, and the game loa
 
 ```powershell
 cd build\Debug
-.\2DGameEngine.exe
+.\2d-game-engine.exe
 ```
 
 ### macOS (Terminal)

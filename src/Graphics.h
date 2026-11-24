@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Vector2DInt.h"
-#include "TextureManager.h"
 
 namespace Engineering2D
 {

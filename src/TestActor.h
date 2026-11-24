@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Scene.h"
 
 using namespace Engineering2D;

@@ -19,14 +19,13 @@ namespace Engineering2D
     public:
         Scene(const char* name, const Vector2DInt& windowSize, const Vector2DInt& worldSize);
         
-        ~Scene();
+        ~Scene() = default;
         
         void Start();
         void Update();
         void ShutDown();
 
-        template<typename T, typename... Args>
-        void CreateEntity(Args&&... args);
+        void CreateEntity(Actor* actor);
         
         std::shared_ptr<Texture> CreateTexture(const char* filePath);
 

@@ -11,5 +11,5 @@ void TestActor::Update(double deltaTime)
 
 void TestActor::Destroy()
 {
-
+	Actor::Destroy();
 }

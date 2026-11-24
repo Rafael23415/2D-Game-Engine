@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
         TestActor actor { Vector2D{0, 0}, c };
 
         
-        //scene.CreateEntity(actor);
+        scene.CreateEntity(&actor);
 
         scene.Start();
     }

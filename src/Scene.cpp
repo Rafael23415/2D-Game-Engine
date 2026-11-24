@@ -24,17 +24,6 @@ namespace Engineering2D
         m_textureManager = std::make_unique<TextureManager>();
     }
     
-    Scene::~Scene()
-    {
-        if (!m_actors.empty())
-        {
-            for (auto& actor : m_actors)
-            {
-                actor.reset();
-            }
-        }
-    }
-    
     void Scene::Start()
     {
         Update();
@@ -84,10 +73,9 @@ namespace Engineering2D
         m_isRunning = false;
     }
 
-    template<typename T, typename... Args>
-    void Scene::CreateEntity(Args&&... args)
+    void Scene::CreateEntity(Actor* actor)
     {
-        const auto a = std::make_unique<T>(std::forward<Args>(args)...);
+        const auto a = std::make_unique<Actor>(actor);
 
         m_actors.push_back(std::move(a));
     }
