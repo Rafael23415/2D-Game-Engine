@@ -71,22 +71,22 @@ namespace Engineering2D
 
 		m_window = std::make_unique<WindowImpl>(name, windowSize);
 		if (!m_window.get()) {
-			throw std::runtime_error(std::string("Failed to create SDL Window: ") + SDL_GetError());
 			SDL_Quit();
+			throw std::runtime_error(std::string("Failed to create SDL Window: ") + SDL_GetError());
 		}
 
 		m_context = std::make_unique<ContextImpl>(*m_window);
 		if (!m_context) {
-			throw std::runtime_error(std::string("Failed to create OpenGL context: ") + SDL_GetError());
 			m_window.reset();
 			SDL_Quit();
+			throw std::runtime_error(std::string("Failed to create OpenGL context: ") + SDL_GetError());
 		}
 
 		if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
-			throw std::runtime_error(std::string("Failed to initialize GLAD"));
 			m_context.reset();
 			m_window.reset();
 			SDL_Quit();
+			throw std::runtime_error(std::string("Failed to initialize GLAD"));
 		}
 		
 		/*int* profileMask;
@@ -151,6 +151,10 @@ namespace Engineering2D
 		}
 
 		Debug::Log("Quit Application");
+
+		glDeleteBuffers(1, &m_vbo);
+		glDeleteVertexArrays(1, &m_vao);
+		glDeleteBuffers(1, &m_ebo);
 
 		SDL_Quit();
 

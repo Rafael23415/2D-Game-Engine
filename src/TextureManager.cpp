@@ -28,6 +28,7 @@ namespace Engineering2D
 	{
 		if (auto it = m_textures.find(filePath); it != m_textures.end())
 		{
+			Debug::Log("File" << filePath);
 			std::cout << "Loaded texture: " << filePath << std::endl;
 			return it->second;
 		}

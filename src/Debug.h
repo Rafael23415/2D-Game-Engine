@@ -2,12 +2,15 @@
 
 #include <iostream>
 #include <string_view>
-#include <string>
 
 namespace Debug {
 
-	//template<typename... Args>
-	void Log(std::string_view message);
+	template<typename... T>
+	void Log(T&... message)
+	{
+		std::cout << "[Log]: " << std::forward(message)... << std::endl;
+	}
+	//void Log(std::string_view message);
 	void LogWarning(std::string_view message);
 	void LogError(std::string_view message);
 };

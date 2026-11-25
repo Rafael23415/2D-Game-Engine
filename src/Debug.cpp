@@ -1,9 +1,9 @@
 #include "Debug.h"
 
-void Debug::Log(std::string_view message)
-{
-	std::cout << "[Log]: " << message << std::endl;
-}
+//void Debug::Log(std::string_view message)
+//{
+//	std::cout << "[Log]: " << message << std::endl;
+//}
 
 void Debug::LogWarning(std::string_view message)
 {
