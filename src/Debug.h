@@ -1,16 +1,24 @@
 #pragma once
 
 #include <iostream>
-#include <string_view>
 
 namespace Debug {
 
-	template<typename... T>
-	void Log(T&... message)
+	template<typename... Args>
+	void Log(Args&&... args)
 	{
-		std::cout << "[Log]: " << std::forward(message)... << std::endl;
+		((std::cout << "[Log]: ") << ... << args) << std::endl;
 	}
-	//void Log(std::string_view message);
-	void LogWarning(std::string_view message);
-	void LogError(std::string_view message);
-};
+	
+	template<typename... Args>
+	void LogWarning(Args&&... args)
+	{
+		((std::cout << "\x1b[33m[Warning]: ") << ... << args) << "\x1b[0m" << std::endl;
+	}
+	
+	template<typename... Args>
+	void LogError(Args&&... args)
+	{
+		((std::cout << "\x1b[31m[Error]: ") << ... << args) << "\x1b[0m" << std::endl;
+	}
+}

@@ -17,9 +17,7 @@ int main(int argc, char* argv[])
         auto c = scene.CreateTexture({ "graphics/LonerC.bmp" });
 
         scene.CreateActor<TestActor>(Vector2D{ 0, 0 }, c);
-
-        //Debug::Log("AAS" + "DAdad");
-
+        
         scene.Start();
     }
     catch(const std::exception& e)

@@ -16,7 +16,7 @@ find_package(SDL3 3.4 CONFIG REQUIRED)   # fails early if SDL is older than 3.4
 add_executable(${PROJECT_NAME}
         src/main.cpp
 	    src/stb_image.cpp
-        src/Debug.h src/Debug.cpp
+        src/Debug.h
         src/Scene.h src/Scene.cpp
         src/Graphics.h src/Graphics.cpp
         src/InputManager.h src/InputManager.cpp

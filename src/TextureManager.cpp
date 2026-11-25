@@ -2,7 +2,6 @@
 
 #include <SDL3/SDL.h>
 #include <glad/glad.h>
-#include <iostream>
 
 #include "stb_image.h"
 #include "Graphics.h"
@@ -13,13 +12,13 @@ namespace Engineering2D
 {
 	Texture::Texture(unsigned int textureIndex) : m_textureIndex(textureIndex)
 	{
-		Debug::Log("Created Texture");
+		Debug::Log("Created a texture");
 	}
 
 	Texture::~Texture()
 	{
 		glDeleteTextures(1, &m_textureIndex);
-		Debug::Log("Destroyed Texture");
+		Debug::Log("Destroyed a texture");
 	}
 
 	//===========================================================================
@@ -28,15 +27,14 @@ namespace Engineering2D
 	{
 		if (auto it = m_textures.find(filePath); it != m_textures.end())
 		{
-			Debug::Log("File" << filePath);
-			std::cout << "Loaded texture: " << filePath << std::endl;
+			Debug::Log("Loaded texture: ", filePath);
 			return it->second;
 		}
 
 		auto texture = std::make_shared<Texture>(GenerateTexture(filePath));
 		m_textures[filePath] = texture;
 
-		std::cout << "Created texture: " << filePath << std::endl;
+		Debug::Log("Created texture: ", filePath);
 		return texture;
 	}
 
@@ -65,7 +63,7 @@ namespace Engineering2D
 			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 		else {
-			std::cout << "Failed to load texture '" << filePath << "' " << stbi_failure_reason() << std::endl;
+			Debug::LogWarning("Failed to load texture '", filePath, "' ", stbi_failure_reason());
 			glDeleteTextures(1, &texture);
 			return 0;
 		}
