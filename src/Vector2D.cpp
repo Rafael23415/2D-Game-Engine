@@ -78,7 +78,7 @@ namespace Engineering2D::Math
         return c;
     }
 
-    Vector2D operator*(const Vector2D& v, double s)
+    Vector2D operator*(const Vector2D& v, float s)
     {
         Vector2D c = v;
         c.x *= s;
@@ -97,7 +97,7 @@ namespace Engineering2D::Math
         return !(a==b);
     }
 
-    double length(const Vector2D& v)
+    float length(const Vector2D& v)
     {
         return std::sqrt(v.x * v.x + v.y * v.y);
     }

@@ -4,8 +4,6 @@
 
 namespace Engineering2D
 {
-	using namespace Math;
-
 	/**
 	 * 
 	 */
@@ -18,8 +16,12 @@ namespace Engineering2D
 		std::unique_ptr<WindowImpl> m_window;
 		std::unique_ptr<ContextImpl> m_context;
 
+		unsigned int m_vbo;
+		unsigned int m_vao;
+		unsigned int m_ebo;
+
 	public:
-		Graphics(const char* title, const Vector2DInt windowSize);
+		Graphics(const char* title, const Math::Vector2DInt windowSize);
 		
 		~Graphics();
 

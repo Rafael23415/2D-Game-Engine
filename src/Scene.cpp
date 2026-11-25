@@ -3,8 +3,12 @@
 #include <stdexcept>
 #include <SDL3/SDL_timer.h>
 
+#include "Debug.h"
+
 namespace Engineering2D
 {
+    using namespace Math;
+
     Scene::Scene(const char* name, const Vector2DInt& windowSize, const Vector2DInt& worldSize) : m_worldSize(worldSize)
     {
         if (windowSize.x <= 0 || windowSize.y <= 0)
@@ -22,6 +26,8 @@ namespace Engineering2D
         m_graphics = std::make_unique<Graphics>(name, windowSize);
         m_inputManager = std::make_unique<InputManager>();
         m_textureManager = std::make_unique<TextureManager>();
+
+        Debug::Log("Created Scene");
     }
     
     void Scene::Start()
@@ -35,10 +41,6 @@ namespace Engineering2D
         static Uint64 currentTime;
         static float deltaTime;
         
-        prevTime = currentTime;
-        currentTime = SDL_GetTicksNS();
-        deltaTime = (currentTime - prevTime) / 1e9f;
-        
         while (m_isRunning)
         {
             m_inputManager->ProcessInput();
@@ -47,6 +49,10 @@ namespace Engineering2D
             {
                 m_isRunning = false;
             }
+
+            prevTime = currentTime;
+            currentTime = SDL_GetTicksNS();
+            deltaTime = (currentTime - prevTime) / 1e9f;
             
             m_graphics->ClearContext();
             

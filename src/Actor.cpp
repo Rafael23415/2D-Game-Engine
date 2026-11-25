@@ -1,10 +1,13 @@
 ﻿#include "Actor.h"
+#include "Debug.h"
 
 namespace Engineering2D
 {
+    using namespace Math;
+
     Actor::Actor(Vector2D position, Vector2D scale, std::weak_ptr<Texture> texture) : m_position(position), m_scale(scale), m_active(true), m_texture(texture)
     {
-        std::cout << "Created an Actor" << std::endl;
+        Debug::Log("Created an Actor");
     }
 
     Actor::Actor(Actor&& actor) noexcept
@@ -15,7 +18,7 @@ namespace Engineering2D
         m_active = actor.m_active;
         m_waitingDestroy = actor.m_waitingDestroy;
 
-        std::cout << "Created an Actor from another actor" << std::endl;
+        Debug::Log("Created an Actor from another actor");
     }
 
     Actor& Actor::operator=(Actor&& actor) noexcept

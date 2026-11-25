@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <concepts>
 
 #include "Graphics.h"
 #include "InputManager.h"
@@ -17,7 +18,7 @@ namespace Engineering2D
     class Scene
     {
     public:
-        Scene(const char* name, const Vector2DInt& windowSize, const Vector2DInt& worldSize);
+        Scene(const char* name, const Math::Vector2DInt& windowSize, const Math::Vector2DInt& worldSize);
         ~Scene() = default;
         
         void Start();
@@ -26,18 +27,18 @@ namespace Engineering2D
 
         template<typename T, typename... Args>
         requires std::derived_from<T, Actor>
-        void CreateActor(Args&&... actor)
+        void CreateActor(Args&&... args)
         {
-            auto a = std::make_unique<T>(std::forward<Args>(actor)...);
+            auto a = std::make_unique<T>(std::forward<Args>(args)...);
             m_actors.push_back(std::move(a));
-        };
+        }
         
         std::shared_ptr<Texture> CreateTexture(const char* filePath);
 
         bool IsRunning() const;
         
     private:
-        const Vector2DInt m_worldSize;
+        const Math::Vector2DInt m_worldSize;
         
         std::unique_ptr<Graphics> m_graphics;
         std::unique_ptr<InputManager> m_inputManager;
@@ -45,6 +46,6 @@ namespace Engineering2D
         
         std::vector<std::unique_ptr<Actor>> m_actors;
         
-        bool m_isRunning;
+        bool m_isRunning = false;
     };
 }

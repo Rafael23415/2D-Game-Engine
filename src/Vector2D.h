@@ -3,16 +3,16 @@
 namespace Engineering2D::Math
 {
     /**
-     * Vector with 2 double parameters.
+     * Vector with 2 float parameters.
      * Can be normalized.
      * 
-     * @param double x
-     * @param double y
+     * @param float x
+     * @param float y
      */
     struct Vector2D
     {
-        double x{ 0.0 };
-        double y{ 0.0 };
+        float x{ 0.0 };
+        float y{ 0.0 };
         
         /**
          * @return (0, 0)
@@ -48,13 +48,13 @@ namespace Engineering2D::Math
         Vector2D normalize() const;
     };
     
-    double length(const Vector2D& v);
+    float length(const Vector2D& v);
     
     Vector2D operator+(const Vector2D& a, const Vector2D& b);
     
     Vector2D operator-(const Vector2D& a, const Vector2D& b);
     
-    Vector2D operator*(const Vector2D& v, double s);
+    Vector2D operator*(const Vector2D& v, float s);
     
     bool operator==(const Vector2D& a, const Vector2D& b);
     

@@ -1,21 +1,25 @@
 #include "TextureManager.h"
-#include "Graphics.h"
 
 #include <SDL3/SDL.h>
 #include <glad/glad.h>
+#include <iostream>
 
-#include "Scene.h"
 #include "stb_image.h"
+#include "Graphics.h"
+#include "Debug.h"
+#include "Scene.h"
 
 namespace Engineering2D
 {
 	Texture::Texture(unsigned int textureIndex) : m_textureIndex(textureIndex)
 	{
+		Debug::Log("Created Texture");
 	}
 
 	Texture::~Texture()
 	{
 		glDeleteTextures(1, &m_textureIndex);
+		Debug::Log("Destroyed Texture");
 	}
 
 	//===========================================================================

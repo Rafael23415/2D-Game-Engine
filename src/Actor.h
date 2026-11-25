@@ -7,12 +7,10 @@
 
 namespace Engineering2D
 {
-    using namespace Math;
-
     class Actor
     {
     public:
-        Actor(Vector2D position, Vector2D scale, std::weak_ptr<Texture> texture);
+        Actor(Math::Vector2D position, Math::Vector2D scale, std::weak_ptr<Texture> texture);
         virtual ~Actor() = default;
     
         Actor(const Actor& actor) = delete;
@@ -29,8 +27,8 @@ namespace Engineering2D
         bool IsWaitingDestroy() const;
     
     protected:
-        Vector2D m_position;
-        Vector2D m_scale;
+        Math::Vector2D m_position;
+        Math::Vector2D m_scale;
         std::weak_ptr<Texture> m_texture;
         bool m_active = true;
         bool m_waitingDestroy = false;

@@ -2,14 +2,16 @@
 
 #include <SDL3/SDL.h>
 #include <glad/glad.h>
-
-#include <iostream>
 #include <stdexcept>
 #include <string>
+
+#include "Debug.h"
 
 
 namespace Engineering2D
 {
+	using namespace Math;
+
 	// ---------------------------------------------------------
 	// Window implementation
 	// ---------------------------------------------------------
@@ -47,6 +49,7 @@ namespace Engineering2D
 			if (!m_contextPtr)
 			{
 				throw std::runtime_error(std::string("Failed to create OpenGL context: ") + SDL_GetError());
+				SDL_GL_DestroyContext(m_contextPtr);
 			}
 		};
 	};
@@ -66,35 +69,70 @@ namespace Engineering2D
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
-		try {
-			m_window = std::make_unique<WindowImpl>(name, windowSize);
-			if (!m_window) {
-				throw std::runtime_error(std::string("Failed to create SDL Window: ") + SDL_GetError());
-				SDL_Quit();
-			}
-
-
-			m_context = std::make_unique<ContextImpl>(*m_window);
-			if (!m_context) {
-				throw std::runtime_error(std::string("Failed to create OpenGL context: ") + SDL_GetError());
-				m_window.reset();
-				SDL_Quit();
-			}
-
-			if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
-				throw std::runtime_error(std::string("Failed to initialize GLAD"));
-				m_context.reset();
-				m_window.reset();
-				SDL_Quit();
-			}
+		m_window = std::make_unique<WindowImpl>(name, windowSize);
+		if (!m_window.get()) {
+			throw std::runtime_error(std::string("Failed to create SDL Window: ") + SDL_GetError());
+			SDL_Quit();
 		}
-		catch (const std::exception& e)
-		{
+
+		m_context = std::make_unique<ContextImpl>(*m_window);
+		if (!m_context) {
+			throw std::runtime_error(std::string("Failed to create OpenGL context: ") + SDL_GetError());
+			m_window.reset();
+			SDL_Quit();
+		}
+
+		if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
+			throw std::runtime_error(std::string("Failed to initialize GLAD"));
 			m_context.reset();
 			m_window.reset();
-
-			std::cout << e.what() << std::endl;
+			SDL_Quit();
 		}
+		
+		/*int* profileMask;
+		int* majorVersion;
+		int* minorVersion;
+		int* stencilSize;
+
+		SDL_GL_GetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, profileMask);
+		SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, majorVersion);
+		SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minorVersion);
+		SDL_GL_GetAttribute(SDL_GL_STENCIL_SIZE, stencilSize);
+
+		Debug::Log(*majorVersion);*/
+
+		int vertexAmount = 4;
+		int vertexPositionSize = 3;
+		int vertexColorSize = 3;
+		int vertexTextureCoordsSize = 2;
+
+		// CPU Buffer
+		float vertices[] = {
+			// positions       // colors         // texture coords
+			0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,  // top right
+			0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  // bottom right
+		   -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom left
+		   -0.5f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f   // top left
+		};
+		unsigned int indices[] = {
+			0, 1, 3,   // first triangle
+			1, 2, 3    // second triangle
+		};
+
+		glGenVertexArrays(1, &m_vao);
+		glBindVertexArray(m_vao);
+
+		// GPU Buffer
+		glGenBuffers(1, &m_vbo);
+
+		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+		// Index Buffer
+		glGenBuffers(1, &m_ebo);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 	}
 	
 	Graphics::~Graphics()
@@ -102,14 +140,21 @@ namespace Engineering2D
 		if (m_context)
 		{
 			m_context.reset();
+			Debug::Log("Destroyed Context");
+
 		}
 
 		if (m_window)
 		{
 			m_window.reset();
+			Debug::Log("Destroyed Window");
 		}
 
+		Debug::Log("Quit Application");
+
 		SDL_Quit();
+
+		// 1 m = 32 pixels
 	}
 
 	void Graphics::ClearContext()
