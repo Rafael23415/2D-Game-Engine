@@ -1,12 +1,9 @@
 #include "TextureManager.h"
 
-#include <SDL3/SDL.h>
 #include <glad/glad.h>
 
 #include "stb_image.h"
-#include "Graphics.h"
 #include "Debug.h"
-#include "Scene.h"
 
 namespace Engineering2D
 {

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Vector2DInt.h"
 
 namespace Engineering2D

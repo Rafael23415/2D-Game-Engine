@@ -3,6 +3,8 @@
 #include "Vector2D.h"
 #include "TestActor.h"
 
+#include <exception>
+
 using namespace Engineering2D;
 using namespace Math;
 

@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include <iostream>
+#include <iosfwd>
 
 namespace Engineering2D::Math
 {

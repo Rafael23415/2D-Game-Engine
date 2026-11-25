@@ -1,5 +1,6 @@
 ﻿#include "Vector2DInt.h"
 
+#include <ostream>
 #include <cmath>
 
 namespace Engineering2D::Math
