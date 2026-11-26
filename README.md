@@ -6,7 +6,9 @@ A 2D game engine written in C++ with SDL3.
 
 ## 1. Installing Prerequisites (Once per Computer)
 
+
 > **Important:** If you already installed vcpkg and created the VCPKG_ROOT environment variable, you can jump to topic 3.
+
 
 ### Windows
 
