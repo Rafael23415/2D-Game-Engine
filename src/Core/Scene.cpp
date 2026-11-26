@@ -26,8 +26,8 @@ namespace Engineering2D
         m_graphics = std::make_unique<Graphics>(name, windowSize);
         m_inputManager = std::make_unique<InputManager>();
         m_textureManager = std::make_unique<TextureManager>();
-
-        Debug::Log("Created Scene");
+        
+        Debug::Log("Created scene with size of ", windowSize);
     }
     
     void Scene::Start()

@@ -14,12 +14,16 @@ int main(int argc, char* argv[])
     {
         Scene scene{ "SDL Test", {960, 720}, {1000, 1000} };
         
-        auto a = scene.CreateTexture({ "graphics/LonerA.bmp" });
-        auto b = scene.CreateTexture({ "graphics/LonerA.bmp" });
-        auto c = scene.CreateTexture({ "graphics/LonerC.bmp" });
-
-        scene.CreateActor<TestActor>(Vector2D{ 0, 0 }, c);
+        auto& player = scene.CreateActor<TestActor>("Player", Vector2D{0, 0});
+        auto& enemy1 = scene.CreateActor<TestActor>("Loner1", Vector2D{0, 0});
+        auto& enemy2 = scene.CreateActor<TestActor>("Rusher", Vector2D{0, 0});
+        auto& enemy3 = scene.CreateActor<TestActor>("Loner2", Vector2D{0, 0});
         
+        player.SetTexture(scene.CreateTexture({ "graphics/Ship1.bmp" }));
+        enemy1.SetTexture(scene.CreateTexture({ "graphics/LonerA.bmp" }));
+        enemy2.SetTexture(scene.CreateTexture({ "graphics/LonerB.bmp" }));
+        enemy3.SetTexture(scene.CreateTexture({ "graphics/LonerA.bmp" }));
+
         scene.Start();
     }
     catch(const std::exception& e)

@@ -26,6 +26,8 @@ namespace Engineering2D
 			{
 				throw std::runtime_error(std::string("Failed to create SDL Window: ") + SDL_GetError());
 			}
+
+			Debug::Log("Created window: ", name, " | ", windowSize);
 		};
 
 		void SwapWindow()
@@ -51,6 +53,8 @@ namespace Engineering2D
 				throw std::runtime_error(std::string("Failed to create OpenGL context: ") + SDL_GetError());
 				SDL_GL_DestroyContext(m_contextPtr);
 			}
+
+			Debug::Log("Created context");
 		};
 	};
 

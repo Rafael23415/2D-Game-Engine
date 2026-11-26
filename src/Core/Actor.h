@@ -4,13 +4,14 @@
 #include "TextureManager.h"
 
 #include <memory>
+#include <string>
 
 namespace Engineering2D
 {
     class Actor
     {
     public:
-        Actor(Math::Vector2D position, Math::Vector2D scale, std::weak_ptr<Texture> texture);
+        Actor(std::string name, Math::Vector2D position, Math::Vector2D scale);
         virtual ~Actor() = default;
     
         Actor(const Actor& actor) = delete;
@@ -18,6 +19,8 @@ namespace Engineering2D
 
         Actor(Actor&& actor) noexcept;
         Actor& operator=(Actor&& actor) noexcept;
+
+        void SetTexture(std::shared_ptr<Texture> texture);
 
         virtual void Update(double deltaTime) = 0;
         virtual void Destroy();
@@ -27,6 +30,7 @@ namespace Engineering2D
         bool IsWaitingDestroy() const;
     
     protected:
+        std::string m_name;
         Math::Vector2D m_position;
         Math::Vector2D m_scale;
         std::weak_ptr<Texture> m_texture;

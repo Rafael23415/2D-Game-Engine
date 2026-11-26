@@ -98,7 +98,7 @@ The build copies the `graphics/` folder next to the executable, and the game loa
 cmake --build build
 
 cd build\Debug
-.\2d-game-engine.exe
+.\Engineering2D.exe
 ```
 
 ### macOS (Terminal)
@@ -107,7 +107,7 @@ cd build\Debug
 cmake --build build-xcode
 
 cd build-xcode/Debug/
-./2d-game-engine
+./Engineering2D
 ```
 **Commands information**
 

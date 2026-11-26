@@ -28,10 +28,13 @@ namespace Engineering2D
 
         template<typename T, typename... Args>
         requires std::derived_from<T, Actor>
-        void CreateActor(Args&&... args)
+        T& CreateActor(Args&&... args)
         {
             auto a = std::make_unique<T>(std::forward<Args>(args)...);
+            T& ref = *a;
             m_actors.push_back(std::move(a));
+
+            return ref;
         }
         
         std::shared_ptr<Texture> CreateTexture(const char* filePath);

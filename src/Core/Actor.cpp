@@ -5,9 +5,9 @@ namespace Engineering2D
 {
     using namespace Math;
 
-    Actor::Actor(Vector2D position, Vector2D scale, std::weak_ptr<Texture> texture) : m_position(position), m_scale(scale), m_active(true), m_texture(texture)
+    Actor::Actor(std::string name,Vector2D position, Vector2D scale) : m_name(name), m_position(position), m_scale(scale), m_active(true)
     {
-        Debug::Log("Created an Actor");
+        Debug::Log("Created ", name);
     }
 
     Actor::Actor(Actor&& actor) noexcept
@@ -30,6 +30,11 @@ namespace Engineering2D
         m_waitingDestroy = actor.m_waitingDestroy;
         
         return *this;
+    }
+
+    void Actor::SetTexture(std::shared_ptr<Texture> texture)
+    {
+        m_texture = texture;
     }
 
     void Actor::Destroy()

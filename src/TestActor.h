@@ -3,6 +3,7 @@
 #include "Actor.h"
 
 #include <memory>
+#include <string>
 
 using namespace Engineering2D;
 
@@ -10,8 +11,7 @@ class TestActor : public Actor
 {
 
 public:
-
-	TestActor(Math::Vector2D position, std::weak_ptr<Texture> texture);
+	TestActor(std::string name, Math::Vector2D position);
 
 	// Inherited via Actor
 	void Update(double deltaTime) override;

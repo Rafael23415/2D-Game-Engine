@@ -24,14 +24,14 @@ namespace Engineering2D
 	{
 		if (auto it = m_textures.find(filePath); it != m_textures.end())
 		{
-			Debug::Log("Loaded texture: ", filePath);
+			Debug::Log("Texture loaded: ", filePath);
 			return it->second;
 		}
 
 		auto texture = std::make_shared<Texture>(GenerateTexture(filePath));
 		m_textures[filePath] = texture;
 
-		Debug::Log("Created texture: ", filePath);
+		Debug::Log("Texture created: ", filePath);
 		return texture;
 	}
 

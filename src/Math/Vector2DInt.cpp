@@ -87,7 +87,7 @@ namespace Engineering2D::Math
     
     std::ostream& operator<<(std::ostream& os, const Vector2DInt& v)
     {
-        return os << "X: " << v.x << "\nY: " << v.y;
+        return os << "(" << v.x << ", " << v.y << ")";
     }
     
     double length(const Vector2DInt& v)
