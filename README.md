@@ -4,7 +4,7 @@ A 2D game engine written in C++ with SDL3.
 
 <!-- TODO: add one or two lines about what the engine does today (e.g. window, input, textures, actors) -->
 
-## Installing Prerequisites (Once per Computer)
+## 1. Installing Prerequisites (Once per Computer)
 
 ### Windows
 
@@ -19,14 +19,14 @@ xcode-select --install
 brew install cmake pkg-config
 ```
 
-### Check that Git and CMake are installed
+### 1.1. Check that Git and CMake are installed
 
 ```bash
 git --version
 cmake --version
 ```
 
-## Install vcpkg (Once per Computer)
+## 2. Install vcpkg (Once per Computer)
 
 ### Windows (PowerShell)
 
@@ -64,7 +64,7 @@ echo $VCPKG_ROOT
 
 Expected result: `/Users/<you>/vcpkg`
 
-## Generate the Project and Build
+## 3. Generate the Project and Build
 
 ### Windows
 
@@ -72,30 +72,29 @@ Open a terminal in the project's root directory and run:
 
 ```bash
 cmake --preset default
-cmake --build build
 ```
 
 ### macOS
 
 ```bash
 cmake --preset xcode
-cmake --build build-xcode
 ```
 
 **Commands information**
 
-- `cmake --preset default` generates the project.
-- `cmake --build build` builds the executable.
+- `cmake --preset default` generates the project, being located inside the created 'build' folder.
 
 > **Note:** the first time you generate the project, vcpkg downloads and compiles SDL3. This can take several minutes.
 
-## Run
+## 4. Run
 
 The build copies the `graphics/` folder next to the executable, and the game loads its images with relative paths such as `graphics/LonerA.bmp`. Run the executable from its own folder so those paths are found.
 
 ### Windows (PowerShell)
 
 ```powershell
+cmake --build build
+
 cd build\Debug
 .\2d-game-engine.exe
 ```
@@ -103,8 +102,13 @@ cd build\Debug
 ### macOS (Terminal)
 
 ```bash
-cd build-xcode/Debug/
-./2DGameEngine
-```
+cmake --build build-xcode
 
-You should see a window with a magenta background.
+cd build-xcode/Debug/
+./2d-game-engine
+```
+**Commands information**
+
+- `cmake --build build` builds the executable.
+
+You should see a window with a dark green background.
