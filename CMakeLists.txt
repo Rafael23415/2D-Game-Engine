@@ -39,11 +39,11 @@ endif()
 # --- Assets ---------------------------------------------------------------
 # Copy the assets next to the executable after every build.
 # (If you create the graphics folder later, run "cmake --preset default" again.)
-if (EXISTS ${CMAKE_SOURCE_DIR}/graphics)
+if (EXISTS ${CMAKE_SOURCE_DIR}/assets)
   add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-            ${CMAKE_SOURCE_DIR}/graphics
-	    $<TARGET_FILE_DIR:${PROJECT_NAME}>/graphics)
+            ${CMAKE_SOURCE_DIR}/assets
+	    $<TARGET_FILE_DIR:${PROJECT_NAME}>/assets)
 endif()
 
 # --- IDE settings ---------------------------------------------------------

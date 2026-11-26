@@ -19,10 +19,10 @@ int main(int argc, char* argv[])
         auto& enemy2 = scene.CreateActor<TestActor>("Rusher", Vector2D{0, 0});
         auto& enemy3 = scene.CreateActor<TestActor>("Loner2", Vector2D{0, 0});
         
-        player.SetTexture(scene.CreateTexture({ "graphics/Ship1.bmp" }));
-        enemy1.SetTexture(scene.CreateTexture({ "graphics/LonerA.bmp" }));
-        enemy2.SetTexture(scene.CreateTexture({ "graphics/LonerB.bmp" }));
-        enemy3.SetTexture(scene.CreateTexture({ "graphics/LonerA.bmp" }));
+        player.SetTexture(scene.CreateTexture({ "assets/Ship1.bmp" }));
+        enemy1.SetTexture(scene.CreateTexture({ "assets/LonerA.bmp" }));
+        enemy2.SetTexture(scene.CreateTexture({ "assets/LonerB.bmp" }));
+        enemy3.SetTexture(scene.CreateTexture({ "assets/LonerA.bmp" }));
 
         scene.Start();
     }

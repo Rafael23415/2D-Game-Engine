@@ -62,6 +62,78 @@ namespace Engineering2D
 	// Graphics
 	// ---------------------------------------------------------
 
+	unsigned int Graphics::CompileShader(GLenum type, const std::string& shaderSource)
+	{
+		GLuint shader = glCreateShader(type);
+		const char* source = shaderSource.c_str();
+		glShaderSource(shader, 1, &source, NULL);
+		glCompileShader(shader);
+
+		GLint success;
+		char infoLog[512];
+
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+		if (!success)
+		{
+			glGetShaderInfoLog(shader, 512, NULL, infoLog);
+			std::cout << "ERROR::SHADER::" << (type == GL_VERTEX_SHADER ? "VERTEX" : "FRAGMENT") << "::COMPILATION_FAILED\n" << infoLog << std::endl;
+			glDeleteShader(shader);
+			return 0;
+		}
+
+		return shader;
+	}
+
+	unsigned int Graphics::CreateShaderProgram(const char* vertexShaderSource, const char* fragmentShaderSource)
+	{
+		/*
+		 * Shader called for every vertex.
+		 * Tells OpenGL where the vertex will be, it's color and the texture coordinates.
+		 */
+		GLuint vertexShader = CompileShader(GL_VERTEX_SHADER, vertexShaderSource);
+
+		/*
+		 * Called for each pixel that's inside the triangle, filling it.
+		 * Decides the color of the pixel.
+		 */
+		GLuint fragmentShader = CompileShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
+
+		if (!vertexShader || !fragmentShader)
+		{
+			Debug::LogError("Failed creating shaders!");
+
+			glDeleteShader(vertexShader);
+			glDeleteShader(fragmentShader);
+			return 0;
+		}
+
+		// Create program
+		GLuint shaderProgram = glCreateProgram();
+
+		// Attach shaders and link
+		glAttachShader(shaderProgram, vertexShader);
+		glAttachShader(shaderProgram, fragmentShader);
+		glLinkProgram(shaderProgram);
+
+		// Clean up individual shaders
+		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShader);
+
+		GLint success;
+		char infoLog[512];
+
+		glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+		if (!success) {
+			glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+			std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+			glDeleteProgram(shaderProgram);
+
+			return 0;
+		}
+
+		return shaderProgram;
+	}
+
 	Graphics::Graphics(const char* name, const Vector2DInt windowSize)
 	{
 		if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -72,6 +144,18 @@ namespace Engineering2D
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+
+		int profileMask;
+		int majorVersion;
+		int minorVersion;
+		int stencilSize; 
+		
+		SDL_GL_GetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, &profileMask);
+		SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &majorVersion);
+		SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &minorVersion);
+		SDL_GL_GetAttribute(SDL_GL_STENCIL_SIZE, &stencilSize);
+
+		Debug::Log((profileMask == 1 ? "OpenGL Core Profile" : (profileMask == 2 ? "OpenGL Compatibility Profile" : "GLX_CONTEXT_ES2_PROFILE_BIT_EXT")), " | Version ", majorVersion, ".", minorVersion);
 
 		m_window = std::make_unique<WindowImpl>(name, windowSize);
 		if (!m_window.get()) {
@@ -93,18 +177,6 @@ namespace Engineering2D
 			throw std::runtime_error(std::string("Failed to initialize GLAD"));
 		}
 		
-		/*int* profileMask;
-		int* majorVersion;
-		int* minorVersion;
-		int* stencilSize;
-
-		SDL_GL_GetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, profileMask);
-		SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, majorVersion);
-		SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, minorVersion);
-		SDL_GL_GetAttribute(SDL_GL_STENCIL_SIZE, stencilSize);
-
-		Debug::Log(*majorVersion);*/
-
 		int vertexAmount = 4;
 		int vertexPositionSize = 3;
 		int vertexColorSize = 3;
@@ -137,6 +209,60 @@ namespace Engineering2D
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+		const char* vertexShaderSource = R"glsl(
+#version 330 core
+
+in vec3 position;
+in vec3 color;
+in vec2 texCoord;
+
+out vec3 Color;
+out vec2 TexCoord;
+
+uniform mat4 transform;
+
+void main()
+{
+    Color = color;
+    TexCoord = texCoord;
+    gl_Position = transform * vec4(position, 1.0);
+}
+)glsl";
+
+		const char* fragmentShaderSource = R"glsl(
+#version 330 core
+in vec3 Color;
+
+out vec4 outColor;
+
+void main()
+{
+    outColor = Color;
+}
+)glsl";
+
+		m_shaderProgram = CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
+
+		if (!m_shaderProgram)
+		{
+			throw std::runtime_error("Failed creating program!");
+		}
+
+		glUseProgram(m_shaderProgram);
+
+		GLuint posAttrib = glGetAttribLocation(m_shaderProgram, "position");
+		glEnableVertexAttribArray(posAttrib);
+		glVertexAttribPointer(posAttrib, vertexPositionSize, GL_FLOAT, GL_FALSE,
+			sizeof(vertices) / vertexAmount, 0);
+
+		GLuint colAttrib = glGetAttribLocation(m_shaderProgram, "color");
+		glEnableVertexAttribArray(colAttrib);
+		glVertexAttribPointer(colAttrib, vertexColorSize, GL_FLOAT, GL_FALSE,
+			sizeof(vertices) / vertexAmount, (void*)(vertexPositionSize * sizeof(float)));
+
+		// Unbind VAO
+		glBindVertexArray(0);
 	}
 	
 	Graphics::~Graphics()
@@ -159,6 +285,7 @@ namespace Engineering2D
 		glDeleteBuffers(1, &m_vbo);
 		glDeleteVertexArrays(1, &m_vao);
 		glDeleteBuffers(1, &m_ebo);
+		glDeleteProgram(m_shaderProgram);
 
 		SDL_Quit();
 
@@ -169,6 +296,13 @@ namespace Engineering2D
 	{
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+	}
+
+	void Graphics::Render()
+	{
+		glBindVertexArray(m_vao);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+		glBindVertexArray(0);
 	}
 
 	void Graphics::SwapWindow()

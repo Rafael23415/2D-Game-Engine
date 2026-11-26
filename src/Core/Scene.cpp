@@ -27,7 +27,7 @@ namespace Engineering2D
         m_inputManager = std::make_unique<InputManager>();
         m_textureManager = std::make_unique<TextureManager>();
         
-        Debug::Log("Created scene with size of ", windowSize);
+        Debug::Log("Created scene with size of ", worldSize);
     }
     
     void Scene::Start()
@@ -55,7 +55,7 @@ namespace Engineering2D
             deltaTime = (currentTime - prevTime) / 1e9f;
             
             m_graphics->ClearContext();
-            
+
             for (auto i = m_actors.begin(); i != m_actors.end();)
             {
                 (*i)->Update(deltaTime);
@@ -69,6 +69,8 @@ namespace Engineering2D
                     ++i;
                 }
             }
+
+            m_graphics->Render();
 
             m_graphics->SwapWindow();
         }

@@ -84,7 +84,7 @@ cmake --preset xcode
 
 **Commands information**
 
-- `cmake --preset default` generates the project, being located inside the created 'build' folder.
+- `cmake --preset default` generates the project, being located inside the created 'build' folder, under the name of Engineering2D.slnx.
 
 > **Note:** the first time you generate the project, vcpkg downloads and compiles SDL3. This can take several minutes.
 

@@ -9,38 +9,48 @@ namespace Engineering2D
 {
 	Texture::Texture(unsigned int textureIndex) : m_textureIndex(textureIndex)
 	{
-		Debug::Log("Created a texture");
+		Debug::Log("Texture created");
 	}
 
 	Texture::~Texture()
 	{
 		glDeleteTextures(1, &m_textureIndex);
-		Debug::Log("Destroyed a texture");
+		Debug::Log("Texture destroyed");
 	}
 
 	//===========================================================================
 
-	std::shared_ptr<Texture> TextureManager::GetTexture(char const* filePath)
+	std::shared_ptr<Texture> TextureManager::GetTexture(const char* filePath)
 	{
 		if (auto it = m_textures.find(filePath); it != m_textures.end())
 		{
-			Debug::Log("Texture loaded: ", filePath);
+			Debug::Log("Loaded texture: ", filePath);
 			return it->second;
 		}
 
-		auto texture = std::make_shared<Texture>(GenerateTexture(filePath));
-		m_textures[filePath] = texture;
+		unsigned int texture;
 
-		Debug::Log("Texture created: ", filePath);
-		return texture;
+		if (GenerateTexture(filePath, texture))
+		{
+			auto p_texture = std::make_shared<Texture>(texture);
+			m_textures[filePath] = p_texture;
+
+			Debug::Log("Created texture: ", filePath);
+
+			return p_texture;
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
-	unsigned int TextureManager::GenerateTexture(const char* filePath)
+	bool TextureManager::GenerateTexture(const char* filePath, unsigned int& texture)
 	{
-		GLuint texture;
-		glGenTextures(1, &texture);
+		GLuint t;
+		glGenTextures(1, &t);
 		glActiveTexture(GL_TEXTURE0 + m_textures.size());
-		glBindTexture(GL_TEXTURE_2D, texture);
+		glBindTexture(GL_TEXTURE_2D, t);
 
 		// Set texture parameters
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -61,12 +71,14 @@ namespace Engineering2D
 		}
 		else {
 			Debug::LogWarning("Failed to load texture '", filePath, "' ", stbi_failure_reason());
-			glDeleteTextures(1, &texture);
-			return 0;
+			glDeleteTextures(1, &t);
+			return false;
 		}
 
 		stbi_image_free(data);
 
-		return texture;
+		texture = t;
+
+		return true;
 	}
 }

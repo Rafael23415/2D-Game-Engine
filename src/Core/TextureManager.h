@@ -37,11 +37,11 @@ namespace Engineering2D
 		TextureManager() = default;
 		~TextureManager() = default;
 
-		std::shared_ptr<Texture> GetTexture(char const* filePath);
+		std::shared_ptr<Texture> GetTexture(const char* filePath);
 
 	private:
 		std::unordered_map<std::string, std::shared_ptr<Texture>> m_textures;
 
-		unsigned int GenerateTexture(char const* filePath);
+		bool GenerateTexture(const char* filePath, unsigned int& texture);
 	};
 }
