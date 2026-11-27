@@ -17,7 +17,6 @@ find_package(glm CONFIG REQUIRED)
 add_executable(${PROJECT_NAME}
         src/main.cpp
         src/TestActor.h src/TestActor.cpp
-        src/Core/Vertex.shader src/Core/Fragment.shader
         src/Core/Scene.h src/Core/Scene.cpp
         src/Core/Graphics.h src/Core/Graphics.cpp
         src/Core/InputManager.h src/Core/InputManager.cpp
@@ -36,6 +35,14 @@ if (MSVC)
   target_compile_options(${PROJECT_NAME} PRIVATE /W4)
 else()
   target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+
+# --- Shaders --------------------------------------------------------------
+if (EXISTS ${CMAKE_SOURCE_DIR}/src/Shaders)
+  add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_SOURCE_DIR}/src/Shaders
+	    $<TARGET_FILE_DIR:${PROJECT_NAME}>/src/Shaders)
 endif()
 
 # --- Assets ---------------------------------------------------------------

@@ -31,8 +31,9 @@ namespace Engineering2D
 		
 		unsigned int m_shaderProgram;
 		
+		void GetShaderSource(const std::string path, std::string& sourceCode);
 		unsigned int CompileShader(GLenum type, const std::string& shaderSource);
-		unsigned int CreateShaderProgram(const char* vertexShaderSource, const char* fragmentShaderSource);
+		unsigned int CreateShaderProgram(const std::string& vertexShaderSource, const std::string& fragmentShaderSource);
 		
 	public:
 		Graphics(const char* title, const Math::Vector2DInt windowSize);

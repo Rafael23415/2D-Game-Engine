@@ -9,6 +9,8 @@
 #include <fstream>
 #include <iostream>
 
+#include <filesystem>
+
 #include "Debug.h"
 
 namespace Engineering2D
@@ -69,6 +71,22 @@ namespace Engineering2D
 	// Graphics
 	// ---------------------------------------------------------
 
+	void Graphics::GetShaderSource(const std::string path, std::string& sourceCode)
+	{
+		std::string line = "";
+
+		std::ifstream file(path.c_str());
+
+		if (file.is_open())
+		{
+			while (std::getline(file, line))
+			{
+				sourceCode += line + "\n";
+			}
+			file.close();
+		}
+	}
+
 	unsigned int Graphics::CompileShader(GLenum type, const std::string& shaderSource)
 	{
 		GLuint shader = glCreateShader(type);
@@ -91,7 +109,7 @@ namespace Engineering2D
 		return shader;
 	}
 
-	unsigned int Graphics::CreateShaderProgram(const char* vertexShaderSource, const char* fragmentShaderSource)
+	unsigned int Graphics::CreateShaderProgram(const std::string& vertexShaderSource, const std::string& fragmentShaderSource)
 	{
 		/*
 		 * Shader called for every vertex.
@@ -155,11 +173,11 @@ namespace Engineering2D
 		int profileMask;
 		int majorVersion;
 		int minorVersion;
-		
+
 		SDL_GL_GetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, &profileMask);
 		SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &majorVersion);
 		SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &minorVersion);
-		
+
 		Debug::Log((profileMask == 1 ? "OpenGL Core Profile" : (profileMask == 2 ? "OpenGL Compatibility Profile" : "GLX_CONTEXT_ES2_PROFILE_BIT_EXT")), " | Version ", majorVersion, ".", minorVersion);
 
 		m_window = std::make_unique<WindowImpl>(title, windowSize);
@@ -181,7 +199,7 @@ namespace Engineering2D
 			SDL_Quit();
 			throw std::runtime_error(std::string("Failed to initialize GLAD"));
 		}
-		
+
 		int vertexAmount = 4;
 		int vertexPositionSize = 3;
 		int vertexColorSize = 3;
@@ -199,62 +217,30 @@ namespace Engineering2D
 			0, 1, 3,   // first triangle
 			1, 2, 3    // second triangle
 		};
-		
+
 		// Vertex attributes
 		glGenVertexArrays(1, &m_vao);
 		glBindVertexArray(m_vao);
-		
+
 		// GPU Buffer
 		glGenBuffers(1, &m_vbo);
-		
+
 		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-		
+
 		// Index Buffer
 		glGenBuffers(1, &m_ebo);
-		
+
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-		
-		/*const char* vertexShaderSource = R"glsl(
-#version 330 core
 
-in vec3 position;
-in vec3 color;
+		std::string vertexShaderSource;
+		std::string fragmentShaderSource;
 
-out vec3 Color;
+		GetShaderSource("src/Shaders/Vertex.shader", vertexShaderSource);
+		GetShaderSource("src/Shaders/Fragment.shader", fragmentShaderSource);
 
-uniform mat4 transform;
-
-void main()
-{
-    Color = color;
-    gl_Position = transform * vec4(position, 1.0);
-}
-)glsl";
-
-		const char* fragmentShaderSource = R"glsl(
-#version 330 core
-in vec3 Color;
-
-out vec4 outColor;
-
-void main()
-{
-    outColor = vec4(Color, 1.0);
-}
-)glsl";*/
-		
-		std::ifstream vertexShaderSource;
-		auto fragmentShaderSource = std::ifstream("shader/Fragment.shader");
-
-		std::ifstream file("shader/Vertex.shader");
-		
-		std::stringstream ss{};
-		ss << file.rdbuf();
-		file.close();
-
-		m_shaderProgram = CreateShaderProgram(ss.str(), fragmentShaderSource);
+		m_shaderProgram = CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
 
 		if (!m_shaderProgram)
 		{
