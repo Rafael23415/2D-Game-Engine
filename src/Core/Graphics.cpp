@@ -6,6 +6,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <stdexcept>
+#include <fstream>
+#include <iostream>
 
 #include "Debug.h"
 
@@ -76,7 +78,7 @@ namespace Engineering2D
 
 		GLint success;
 		char infoLog[512];
-
+		
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 		if (!success)
 		{
@@ -214,7 +216,7 @@ namespace Engineering2D
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 		
-		const char* vertexShaderSource = R"glsl(
+		/*const char* vertexShaderSource = R"glsl(
 #version 330 core
 
 in vec3 position;
@@ -241,9 +243,18 @@ void main()
 {
     outColor = vec4(Color, 1.0);
 }
-)glsl";
+)glsl";*/
 		
-		m_shaderProgram = CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
+		std::ifstream vertexShaderSource;
+		auto fragmentShaderSource = std::ifstream("shader/Fragment.shader");
+
+		std::ifstream file("shader/Vertex.shader");
+		
+		std::stringstream ss{};
+		ss << file.rdbuf();
+		file.close();
+
+		m_shaderProgram = CreateShaderProgram(ss.str(), fragmentShaderSource);
 
 		if (!m_shaderProgram)
 		{

@@ -8,7 +8,6 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # --- Dependencies ---------------------------------------------------------
 
-
 find_package(OpenGL REQUIRED)
 find_package(SDL3 3.4 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
@@ -18,6 +17,7 @@ find_package(glm CONFIG REQUIRED)
 add_executable(${PROJECT_NAME}
         src/main.cpp
         src/TestActor.h src/TestActor.cpp
+        src/Core/Vertex.shader src/Core/Fragment.shader
         src/Core/Scene.h src/Core/Scene.cpp
         src/Core/Graphics.h src/Core/Graphics.cpp
         src/Core/InputManager.h src/Core/InputManager.cpp
@@ -40,7 +40,7 @@ endif()
 
 # --- Assets ---------------------------------------------------------------
 # Copy the assets next to the executable after every build.
-# (If you create the graphics folder later, run "cmake --preset default" again.)
+# (If you create the assets folder later, run "cmake --preset default" again.)
 if (EXISTS ${CMAKE_SOURCE_DIR}/assets)
   add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -49,7 +49,7 @@ if (EXISTS ${CMAKE_SOURCE_DIR}/assets)
 endif()
 
 # --- IDE settings ---------------------------------------------------------
-# Run from the executable's folder inside the IDEs, so "graphics/..." is found
+# Run from the executable's folder inside the IDEs, so "assets/..." is found
 set_target_properties(${PROJECT_NAME} PROPERTIES
   VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
   XCODE_SCHEME_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
