@@ -270,6 +270,11 @@ void main()
 	
 	Graphics::~Graphics()
 	{
+		glDeleteBuffers(1, &m_vbo);
+		glDeleteVertexArrays(1, &m_vao);
+		glDeleteBuffers(1, &m_ebo);
+		glDeleteProgram(m_shaderProgram);
+		
 		if (m_context)
 		{
 			m_context.reset();
@@ -284,12 +289,7 @@ void main()
 		}
 
 		Debug::Log("Quit Application");
-
-		glDeleteBuffers(1, &m_vbo);
-		glDeleteVertexArrays(1, &m_vao);
-		glDeleteBuffers(1, &m_ebo);
-		glDeleteProgram(m_shaderProgram);
-
+		
 		SDL_Quit();
 
 		// 1 m = 32 pixels
