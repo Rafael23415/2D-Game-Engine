@@ -37,6 +37,11 @@ namespace Engineering2D
         m_texture = texture;
     }
 
+    Vector2D Actor::GetPosition()
+    {
+        return m_position;
+    }
+
     void Actor::Destroy()
     {
         m_waitingDestroy = true;
@@ -45,6 +50,11 @@ namespace Engineering2D
     void Actor::SetActive(bool active)
     {
         m_active = active;
+    }
+
+    bool Actor::HasTexture() const
+    {
+        return m_texture.lock() != nullptr;
     }
 
     bool Actor::IsActive() const

@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
 {
     try
     {
-        Scene scene{ "SDL Test", {960, 720}, {1000, 1000} };
+        Scene scene{ "Test Game", {960, 720}, {1000, 1000} };
         
         auto& player = scene.CreateActor<TestActor>("Player", Vector2D{0, 0});
         auto& enemy1 = scene.CreateActor<TestActor>("Loner1", Vector2D{0, 0});
@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
         enemy1.SetTexture(scene.CreateTexture({ "assets/LonerA.bmp" }));
         enemy2.SetTexture(scene.CreateTexture({ "assets/LonerB.bmp" }));
         enemy3.SetTexture(scene.CreateTexture({ "assets/LonerA.bmp" }));
-
+        
         scene.Start();
     }
     catch(const std::exception& e)

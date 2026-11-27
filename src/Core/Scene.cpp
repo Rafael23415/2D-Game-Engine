@@ -66,11 +66,14 @@ namespace Engineering2D
                 }
                 else
                 {
+                    if ((*i)->HasTexture())
+                    {
+                        m_graphics->Render((*i)->GetPosition());
+                    }
                     ++i;
                 }
             }
-
-            m_graphics->Render();
+            
 
             m_graphics->SwapWindow();
         }

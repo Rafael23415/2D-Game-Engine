@@ -21,11 +21,13 @@ namespace Engineering2D
         Actor& operator=(Actor&& actor) noexcept;
 
         void SetTexture(std::shared_ptr<Texture> texture);
+        Math::Vector2D GetPosition();
 
         virtual void Update(double deltaTime) = 0;
         virtual void Destroy();
         
         virtual void SetActive(bool active);
+        bool HasTexture() const;
         bool IsActive() const;
         bool IsWaitingDestroy() const;
     

@@ -9,13 +9,13 @@ namespace Engineering2D
 {
 	Texture::Texture(unsigned int textureIndex) : m_textureIndex(textureIndex)
 	{
-		Debug::Log("Texture created");
+		Debug::Log("Created texture");
 	}
 
 	Texture::~Texture()
 	{
 		glDeleteTextures(1, &m_textureIndex);
-		Debug::Log("Texture destroyed");
+		Debug::Log("Destroyed texture");
 	}
 
 	//===========================================================================
@@ -24,7 +24,7 @@ namespace Engineering2D
 	{
 		if (auto it = m_textures.find(filePath); it != m_textures.end())
 		{
-			Debug::Log("Loaded texture: ", filePath);
+			Debug::Log("Loaded: ", filePath);
 			return it->second;
 		}
 
@@ -35,7 +35,7 @@ namespace Engineering2D
 			auto p_texture = std::make_shared<Texture>(texture);
 			m_textures[filePath] = p_texture;
 
-			Debug::Log("Created texture: ", filePath);
+			Debug::Log("Created: ", filePath);
 
 			return p_texture;
 		}
@@ -45,13 +45,13 @@ namespace Engineering2D
 		}
 	}
 
-	bool TextureManager::GenerateTexture(const char* filePath, unsigned int& texture)
+	bool TextureManager::GenerateTexture(const char* filePath, unsigned int& texture) const
 	{
 		GLuint t;
 		glGenTextures(1, &t);
-		glActiveTexture(GL_TEXTURE0 + m_textures.size());
+		glActiveTexture(GL_TEXTURE0 + static_cast<int>(m_textures.size()));
 		glBindTexture(GL_TEXTURE_2D, t);
-
+		
 		// Set texture parameters
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);

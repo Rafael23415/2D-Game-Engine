@@ -2,11 +2,12 @@
 
 #include <SDL3/SDL.h>
 #include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <stdexcept>
-#include <string>
 
 #include "Debug.h"
-
 
 namespace Engineering2D
 {
@@ -20,14 +21,14 @@ namespace Engineering2D
 	{
 		std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> m_windowPtr;
 
-		WindowImpl(const char* name, const Vector2DInt windowSize) : m_windowPtr(SDL_CreateWindow(name, windowSize.x, windowSize.y, SDL_WINDOW_OPENGL), SDL_DestroyWindow)
+		WindowImpl(const char* title, const Vector2DInt windowSize) : m_windowPtr(SDL_CreateWindow(title, windowSize.x, windowSize.y, SDL_WINDOW_OPENGL), SDL_DestroyWindow)
 		{
 			if (!m_windowPtr)
 			{
 				throw std::runtime_error(std::string("Failed to create SDL Window: ") + SDL_GetError());
 			}
 
-			Debug::Log("Created window: ", name, " | ", windowSize);
+			Debug::Log("Created window: ", title, " | ", windowSize);
 		};
 
 		void SwapWindow()
@@ -44,18 +45,22 @@ namespace Engineering2D
 	{
 		SDL_GLContext m_contextPtr = nullptr;
 
-		ContextImpl(WindowImpl& window)
+		ContextImpl(const WindowImpl& window)
 		{
 			m_contextPtr = SDL_GL_CreateContext(window.m_windowPtr.get());
 
 			if (!m_contextPtr)
 			{
 				throw std::runtime_error(std::string("Failed to create OpenGL context: ") + SDL_GetError());
-				SDL_GL_DestroyContext(m_contextPtr);
 			}
 
 			Debug::Log("Created context");
-		};
+		}
+		
+		~ContextImpl()
+		{
+			SDL_GL_DestroyContext(m_contextPtr);
+		}
 	};
 
 	// ---------------------------------------------------------
@@ -91,13 +96,13 @@ namespace Engineering2D
 		 * Tells OpenGL where the vertex will be, it's color and the texture coordinates.
 		 */
 		GLuint vertexShader = CompileShader(GL_VERTEX_SHADER, vertexShaderSource);
-
+		
 		/*
 		 * Called for each pixel that's inside the triangle, filling it.
 		 * Decides the color of the pixel.
 		 */
 		GLuint fragmentShader = CompileShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
-
+		
 		if (!vertexShader || !fragmentShader)
 		{
 			Debug::LogError("Failed creating shaders!");
@@ -134,7 +139,7 @@ namespace Engineering2D
 		return shaderProgram;
 	}
 
-	Graphics::Graphics(const char* name, const Vector2DInt windowSize)
+	Graphics::Graphics(const char* title, const Vector2DInt windowSize)
 	{
 		if (!SDL_Init(SDL_INIT_VIDEO)) {
 			throw std::runtime_error(std::string("SDL_Init failed: ") + SDL_GetError());
@@ -148,16 +153,14 @@ namespace Engineering2D
 		int profileMask;
 		int majorVersion;
 		int minorVersion;
-		int stencilSize; 
 		
 		SDL_GL_GetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, &profileMask);
 		SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &majorVersion);
 		SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &minorVersion);
-		SDL_GL_GetAttribute(SDL_GL_STENCIL_SIZE, &stencilSize);
-
+		
 		Debug::Log((profileMask == 1 ? "OpenGL Core Profile" : (profileMask == 2 ? "OpenGL Compatibility Profile" : "GLX_CONTEXT_ES2_PROFILE_BIT_EXT")), " | Version ", majorVersion, ".", minorVersion);
 
-		m_window = std::make_unique<WindowImpl>(name, windowSize);
+		m_window = std::make_unique<WindowImpl>(title, windowSize);
 		if (!m_window.get()) {
 			SDL_Quit();
 			throw std::runtime_error(std::string("Failed to create SDL Window: ") + SDL_GetError());
@@ -194,38 +197,36 @@ namespace Engineering2D
 			0, 1, 3,   // first triangle
 			1, 2, 3    // second triangle
 		};
-
+		
+		// Vertex attributes
 		glGenVertexArrays(1, &m_vao);
 		glBindVertexArray(m_vao);
-
+		
 		// GPU Buffer
 		glGenBuffers(1, &m_vbo);
-
+		
 		glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
+		
 		// Index Buffer
 		glGenBuffers(1, &m_ebo);
-
+		
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
+		
 		const char* vertexShaderSource = R"glsl(
 #version 330 core
 
 in vec3 position;
 in vec3 color;
-in vec2 texCoord;
 
 out vec3 Color;
-out vec2 TexCoord;
 
 uniform mat4 transform;
 
 void main()
 {
     Color = color;
-    TexCoord = texCoord;
     gl_Position = transform * vec4(position, 1.0);
 }
 )glsl";
@@ -238,29 +239,31 @@ out vec4 outColor;
 
 void main()
 {
-    outColor = Color;
+    outColor = vec4(Color, 1.0);
 }
 )glsl";
-
+		
 		m_shaderProgram = CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
 
 		if (!m_shaderProgram)
 		{
 			throw std::runtime_error("Failed creating program!");
 		}
-
+		
 		glUseProgram(m_shaderProgram);
-
+		
 		GLuint posAttrib = glGetAttribLocation(m_shaderProgram, "position");
 		glEnableVertexAttribArray(posAttrib);
 		glVertexAttribPointer(posAttrib, vertexPositionSize, GL_FLOAT, GL_FALSE,
 			sizeof(vertices) / vertexAmount, 0);
-
+		
 		GLuint colAttrib = glGetAttribLocation(m_shaderProgram, "color");
 		glEnableVertexAttribArray(colAttrib);
 		glVertexAttribPointer(colAttrib, vertexColorSize, GL_FLOAT, GL_FALSE,
 			sizeof(vertices) / vertexAmount, (void*)(vertexPositionSize * sizeof(float)));
-
+		
+		transLoc = glGetUniformLocation(m_shaderProgram, "transform");
+		
 		// Unbind VAO
 		glBindVertexArray(0);
 	}
@@ -292,24 +295,29 @@ void main()
 		// 1 m = 32 pixels
 	}
 
-	void Graphics::ClearContext()
+	void Graphics::ClearContext() const
 	{
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
-
-	void Graphics::Render()
+	
+	void Graphics::Render(const Vector2D& position) const
 	{
+		auto trans = glm::mat4(1.0f);
+		trans = glm::translate(trans, glm::vec3(position.x, position.y, 0));
+		
+		glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(trans));
+		
 		glBindVertexArray(m_vao);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 		glBindVertexArray(0);
 	}
-
-	void Graphics::SwapWindow()
+	
+	void Graphics::SwapWindow() const
 	{
 		if(m_window)
 		{
-			m_window.get()->SwapWindow();
+			m_window->SwapWindow();
 		}
 	}
 }

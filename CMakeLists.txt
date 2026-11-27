@@ -9,6 +9,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 # --- Dependencies ---------------------------------------------------------
 
 add_subdirectory(external/glad)
+add_subdirectory(external/glm)
 find_package(OpenGL REQUIRED)
 find_package(SDL3 3.4 CONFIG REQUIRED)
 
@@ -19,16 +20,16 @@ add_executable(${PROJECT_NAME}
         src/Core/Scene.h src/Core/Scene.cpp
         src/Core/Graphics.h src/Core/Graphics.cpp
         src/Core/InputManager.h src/Core/InputManager.cpp
-        src/Core/TextureManager.h src/Core/TextureManager.cpp
-	      src/Core/Actor.h src/Core/Actor.cpp
+        src/Core/TextureManager.h src/Core/TextureManager.cpp 
+        src/Core/Actor.h src/Core/Actor.cpp
         src/Math/Vector2D.h src/Math/Vector2D.cpp
         src/Math/Vector2DInt.h src/Math/Vector2DInt.cpp
         src/Debug/Debug.h
-	      src/External/stb_image.cpp
+        src/External/stb_image.cpp
 )
 target_include_directories(${PROJECT_NAME} PRIVATE src/Core src/Math src/Debug src/External)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3 glad OpenGL::GL)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3 glad glm OpenGL::GL)
  
 if (MSVC)
   target_compile_options(${PROJECT_NAME} PRIVATE /W4)
