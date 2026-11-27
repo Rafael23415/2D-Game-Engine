@@ -14,10 +14,10 @@ int main(int argc, char* argv[])
     {
         Scene scene{ "Test Game", {960, 720}, {1000, 1000} };
         
-        auto& player = scene.CreateActor<TestActor>("Player", Vector2D{0, 0});
-        auto& enemy1 = scene.CreateActor<TestActor>("Loner1", Vector2D{0, 0});
-        auto& enemy2 = scene.CreateActor<TestActor>("Rusher", Vector2D{0, 0});
-        auto& enemy3 = scene.CreateActor<TestActor>("Loner2", Vector2D{0, 0});
+        auto& player = scene.CreateActor<TestActor>("Player", Vector2D{-0.5, 0.5});
+        auto& enemy1 = scene.CreateActor<TestActor>("Loner1", Vector2D{0.5, 0.5});
+        auto& enemy2 = scene.CreateActor<TestActor>("Rusher", Vector2D{-0.5, -0.5});
+        auto& enemy3 = scene.CreateActor<TestActor>("Loner2", Vector2D{0.5, -0.5});
         
         player.SetTexture(scene.CreateTexture({ "assets/Ship1.bmp" }));
         enemy1.SetTexture(scene.CreateTexture({ "assets/LonerA.bmp" }));

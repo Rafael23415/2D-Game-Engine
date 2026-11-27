@@ -8,10 +8,11 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # --- Dependencies ---------------------------------------------------------
 
-add_subdirectory(external/glad)
-add_subdirectory(external/glm)
+
 find_package(OpenGL REQUIRED)
 find_package(SDL3 3.4 CONFIG REQUIRED)
+find_package(glad CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
 
 # --- Application ----------------------------------------------------------
 add_executable(${PROJECT_NAME}
@@ -29,7 +30,7 @@ add_executable(${PROJECT_NAME}
 )
 target_include_directories(${PROJECT_NAME} PRIVATE src/Core src/Math src/Debug src/External)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3 glad glm OpenGL::GL)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3 glad::glad glm::glm OpenGL::GL)
  
 if (MSVC)
   target_compile_options(${PROJECT_NAME} PRIVATE /W4)
@@ -53,8 +54,3 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
   VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${PROJECT_NAME}>"
   XCODE_SCHEME_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
 set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
-
-set_target_properties(glad PROPERTIES FOLDER "external")
-if(TARGET SDL3-static)
-    set_target_properties(SDL3-static PROPERTIES FOLDER "external")
-endif()
