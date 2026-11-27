@@ -86,11 +86,11 @@ cmake --preset xcode
 
 - `cmake --preset default` generates the project, being located inside the created 'build' folder, under the name of Engineering2D.slnx.
 
-> **Note:** the first time you generate the project, vcpkg downloads and compiles SDL3. This can take several minutes.
+> **Note:** the first time you generate the project, vcpkg downloads and compiles SDL3, glad and glm. This can take several minutes.
 
 ## 4. Run
 
-The build copies the `graphics/` folder next to the executable, and the game loads its images with relative paths such as `graphics/LonerA.bmp`. Run the executable from its own folder so those paths are found.
+The build copies the `assets/` folder next to the executable, and the game loads its images with relative paths such as `assets/LonerA.bmp`. Run the executable from its own folder so those paths are found.
 
 ### Windows (PowerShell)
 
